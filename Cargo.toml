@@ -1,0 +1,23 @@
+[package]
+name = "gemini-ai"
+version = "0.1.0"
+edition = "2021"
+authors = ["hariprasath"]
+license = "MIT"
+repository = "https://github.com/HashiramaSenjuhari/gemini-ai"
+documentation = "https://docs.rs/gemini-ai"
+homepage = "https://gemini.ai"
+description = "A Rust wrapper for the Gemini AI API, enabling access to advanced natural language processing and multimodal models."
+
+
+keywords = ["gemini", "AI", "natural language processing", "multimodal"]
+categories = ["AI", "Machine Learning", "Natural Language Processing"]
+
+
+[dependencies]
+base64 = "0.22.1"
+dotenv = "0.15.0"
+http-scrap = "0.1.1129"
+native-tls = "0.2.12"
+serde = { version = "1.0.215", features = ["derive"] }
+serde_json = "1.0.133"
