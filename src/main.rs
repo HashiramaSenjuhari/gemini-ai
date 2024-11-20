@@ -1,4 +1,4 @@
-use gemini::{
+use gemini_ai::{
     decode_gemini,
     format::{key, nested},
     schema::schema_store,
@@ -25,9 +25,9 @@ fn main() {
 
     let builder = GeminiContentGenBuilder::new()
         .env("GEMINI_API_KEY")
-        .model(gemini::Models::GEMINI_1_5_PRO_002)
-        .kind(gemini::Kind::Image("OIP.jpeg"))
-        .text("Melinda French Gates")
+        .model(gemini_ai::Models::GEMINI_1_5_PRO_002)
+        .kind(gemini_ai::Kind::Image("OIP.jpeg"))
+        .text("")
         .build()
         .output();
     println!("{}", builder);
