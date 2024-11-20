@@ -11,7 +11,6 @@ description = "A Rust wrapper for the Gemini AI API, enabling access to advanced
 
 
 keywords = ["gemini", "AI", "multimodal"]
-categories = ["AI", "Machine Learning", "Natural Language Processing"]
 
 
 [dependencies]
