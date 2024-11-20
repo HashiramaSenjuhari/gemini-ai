@@ -10,7 +10,7 @@ homepage = "https://gemini.ai"
 description = "A Rust wrapper for the Gemini AI API, enabling access to advanced natural language processing and multimodal models."
 
 
-keywords = ["gemini", "AI", "natural language processing", "multimodal"]
+keywords = ["gemini", "AI", "multimodal"]
 categories = ["AI", "Machine Learning", "Natural Language Processing"]
 
 
