@@ -1,5 +1,5 @@
 use gemini_ai::{
-    cloud::cloud::create_cloud_gemini_and_get_upload_uri,
+    // cloud::cloud::create_cloud_gemini_and_get_upload_uri,
     format::{key, nested, Function, Parameters, PropertiesParameter},
     pulse::{
         format::{feature, Properties},
