@@ -2,7 +2,8 @@
 
 Welcome to the **Rust Gemini AI**! This crate provides a Rust interface to interact with the **Gemini AI API**, which powers advanced natural language processing (NLP) and multimodal capabilities.
 
-![Gemini AI Logo](https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fcrates.io%2Fcrates%2Fgemini-ai)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Gemini AI Logo](https://img.shields.io/crates/v/gemini-ai)
 
 ## New Feature Added
 
