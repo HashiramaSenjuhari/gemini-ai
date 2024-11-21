@@ -1,10 +1,11 @@
 use gemini_ai::{
-    cloud::cloud::check_state,
+    // cloud::cloud::check_state,
     decode_gemini,
     format::{key, nested, Function, Parameters, Properties, PropertiesParameter},
     pulse::pulse::GeminiPulse,
     schema::schema_store,
-    GeminiContentGenBuilder, Pair,
+    GeminiContentGenBuilder,
+    Pair,
 };
 
 fn main() {
