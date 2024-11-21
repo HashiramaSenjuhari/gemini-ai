@@ -21,29 +21,25 @@ To add this crate to your project, include it in your `Cargo.toml`:
 
 ```toml
 
-
-        [dependencies]
-        gemini-ai = "0.1"
-
+   [dependencies]
+   gemini-ai = "0.1"
 
 ```
 
 ```toml
 
+   let builder = GeminiContentGenBuilder::new()
+        .env("GEMINI_API_KEY")
+        .model(gemini_ai::Models::GEMINI_1_5_PRO_002)
+        .kind(gemini_ai::Kind::Image("OIP.jpeg"))
+        .instruction(
+        "you are great image analyzer and tell the image design accuratly and how it can be made great",
+        )
+        .text("image")
+        .build()
+        .output();
+   println!("{}", builder);
 
-        let builder = GeminiContentGenBuilder::new()
-                .env("GEMINI_API_KEY")
-                .model(gemini_ai::Models::GEMINI_1_5_PRO_002)
-                .kind(gemini_ai::Kind::Image("OIP.jpeg"))
-                .instruction(
-                "you are great image analyzer and tell the image design accuratly and how it can be made great",
-                )
-                .text("image")
-                .build()
-                .output();
-        println!("{}", builder);
-
-        let string = decode_gemini(&builder); // optional to decode the output if it sends the reponse else error
-
+   let string = decode_gemini(&builder); // optional to decode the output if it sends the reponse else error
 
 ```
