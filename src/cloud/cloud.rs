@@ -25,7 +25,7 @@ pub fn create_cloud_gemini_and_get_upload_uri(video: &str) -> String {
         .connect("generativelanguage.googleapis.com", stream)
         .unwrap();
 
-    let response = format!("POST /upload/v1beta/files?key=AIzaSyDJXrc6CmpwX5TwF2R53ro_yd18dQ_gMNM HTTP/1.1\r\nHost: generativelanguage.googleapis.com\r\n\
+    let response = format!("POST /upload/v1beta/files?key="" HTTP/1.1\r\nHost: generativelanguage.googleapis.com\r\n\
     X-Goog-Upload-Protocol: resumable\r\n\
     X-Goog-Upload-Command: start\r\n\
     X-Goog-Upload-Header-Content-Length: {}\r\n\
@@ -136,7 +136,7 @@ pub fn check_state() {
         .connect("generativelanguage.googleapis.com", stream)
         .unwrap();
 
-    let response = format!("GET /v1beta/files/75y4otkc91bu?key=AIzaSyDJXrc6CmpwX5TwF2R53ro_yd18dQ_gMNM HTTP/1.1\r\nHost: generativelanguage.googleapis.com\r\n\r\n");
+    let response = format!("GET /v1beta/files/75y4otkc91bu?key= HTTP/1.1\r\nHost: generativelanguage.googleapis.com\r\n\r\n");
 
     connect.write_all(response.as_bytes());
     connect.flush();

@@ -442,7 +442,7 @@ impl<'output> GeminiContentGen<'output> {
             .unwrap();
 
         let post = format!(
-              "POST /upload/v1beta/files?key=AIzaSyDyM5-R-tmdq6CU1o85r3ilCFx3YB7Hm_g HTTP/1.1\r\nHost: generativelanguage.googleapis.com\r\n\
+              "POST /upload/v1beta/files?key= HTTP/1.1\r\nHost: generativelanguage.googleapis.com\r\n\
           X-Goog-Upload-Protocol: resumable\r\n\
           X-Goog-Upload-Command: start\r\n\
           X-Goog-Upload-Header-Content-Length: {}\r\n\
@@ -543,7 +543,9 @@ impl<'output> GeminiContentGen<'output> {
             .connect("generativelanguage.googleapis.com", stream)
             .unwrap();
 
-        let get  = format!("GET /v1beta/files?key=AIzaSyDyM5-R-tmdq6CU1o85r3ilCFx3YB7Hm_g HTTP/1.1\r\nHost: generativelanguage.googleapis.com\r\n\r\n");
+        let get = format!(
+            "GET /v1beta/files?key= HTTP/1.1\r\nHost: generativelanguage.googleapis.com\r\n\r\n"
+        );
 
         client.write_all(get.as_bytes());
         client.flush();
