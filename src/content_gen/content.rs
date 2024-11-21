@@ -17,8 +17,8 @@ use crate::{
     format::{image, json, pdf, text, transcribe},
     Config, ConfigBuilder, ConfigNotPresent, ConfigPresent, EnvVariableNotPresent,
     EnvVariablePresent, GeminiContentGen, GeminiContentGenBuilder, InstructionNotPresent,
-    InstructionPresent, Kind, ModelNotPresent, ModelPresent, Models, PropertiesNotPresent,
-    PropertiesPresent, TextNotPresent, TextPresent,
+    InstructionPresent, Kind, MaxLenNotPresent, MaxLenPresent, ModelNotPresent, ModelPresent,
+    Models, PropertiesNotPresent, PropertiesPresent, TextNotPresent, TextPresent, TokenLen,
 };
 
 impl<'gemini>
@@ -28,6 +28,7 @@ impl<'gemini>
         ModelNotPresent,
         ConfigNotPresent,
         TextNotPresent,
+        MaxLenNotPresent,
         InstructionNotPresent,
         PropertiesNotPresent,
     >
@@ -38,12 +39,14 @@ impl<'gemini>
             env_variable: "",
             text: "",
             instruction: "",
+            max_len: 8192,
             config: ConfigBuilder {
                 // schema_type: String::new(),
                 r#type: Kind::Text,
                 propertiesstate: std::marker::PhantomData,
             },
             envstate: std::marker::PhantomData,
+            maxstate: std::marker::PhantomData,
             instructionstate: std::marker::PhantomData,
             modelstate: std::marker::PhantomData,
             configstate: std::marker::PhantomData,
@@ -59,6 +62,7 @@ impl<'gemini>
         ModelNotPresent,
         ConfigNotPresent,
         TextNotPresent,
+        MaxLenNotPresent,
         InstructionNotPresent,
         PropertiesNotPresent,
     >
@@ -72,6 +76,7 @@ impl<'gemini>
         ModelNotPresent,
         ConfigNotPresent,
         TextNotPresent,
+        MaxLenNotPresent,
         InstructionNotPresent,
         PropertiesNotPresent,
     > {
@@ -81,6 +86,7 @@ impl<'gemini>
             model: &self.model,
             text: self.text,
             instruction: &self.instruction,
+            max_len: self.max_len,
             config: ConfigBuilder {
                 // schema_type: String::new(),
                 r#type: self.config.r#type,
@@ -88,6 +94,7 @@ impl<'gemini>
             },
             envstate: std::marker::PhantomData,
             instructionstate: std::marker::PhantomData,
+            maxstate: std::marker::PhantomData,
             modelstate: std::marker::PhantomData,
             configstate: std::marker::PhantomData,
             textstate: std::marker::PhantomData,
@@ -102,6 +109,7 @@ impl<'gemini>
         ModelNotPresent,
         ConfigNotPresent,
         TextNotPresent,
+        MaxLenNotPresent,
         InstructionNotPresent,
         PropertiesNotPresent,
     >
@@ -115,6 +123,7 @@ impl<'gemini>
         ModelPresent,
         ConfigNotPresent,
         TextNotPresent,
+        MaxLenNotPresent,
         InstructionNotPresent,
         PropertiesNotPresent,
     > {
@@ -131,6 +140,7 @@ impl<'gemini>
             model: &self.model,
             text: self.text,
             instruction: self.instruction,
+            max_len: self.max_len,
             config: ConfigBuilder {
                 // schema_type: String::new(),
                 r#type: self.config.r#type,
@@ -141,6 +151,7 @@ impl<'gemini>
             modelstate: std::marker::PhantomData,
             configstate: std::marker::PhantomData,
             textstate: std::marker::PhantomData,
+            maxstate: std::marker::PhantomData,
         }
     }
 }
@@ -152,6 +163,7 @@ impl<'properties>
         ModelPresent,
         ConfigNotPresent,
         TextNotPresent,
+        MaxLenNotPresent,
         InstructionNotPresent,
         PropertiesNotPresent,
     >
@@ -164,6 +176,7 @@ impl<'properties>
         EnvVariablePresent,
         ModelPresent,
         ConfigPresent,
+        MaxLenNotPresent,
         TextNotPresent,
         InstructionNotPresent,
         PropertiesPresent,
@@ -174,6 +187,7 @@ impl<'properties>
             model: &self.model,
             text: self.text,
             instruction: self.instruction,
+            max_len: self.max_len,
             config: ConfigBuilder {
                 // schema_type: String::new(),
                 r#type: self.config.r#type,
@@ -184,6 +198,7 @@ impl<'properties>
             modelstate: std::marker::PhantomData,
             configstate: std::marker::PhantomData,
             textstate: std::marker::PhantomData,
+            maxstate: std::marker::PhantomData,
         }
     }
 }
@@ -194,6 +209,7 @@ impl<'instruction>
         EnvVariablePresent,
         ModelPresent,
         ConfigPresent,
+        MaxLenNotPresent,
         TextNotPresent,
         InstructionNotPresent,
         PropertiesPresent,
@@ -208,6 +224,7 @@ impl<'instruction>
         ModelPresent,
         ConfigPresent,
         TextNotPresent,
+        MaxLenNotPresent,
         InstructionPresent,
         PropertiesPresent,
     > {
@@ -217,16 +234,18 @@ impl<'instruction>
             model: &self.model,
             text: self.text,
             instruction: self.instruction,
+            max_len: self.max_len,
             config: ConfigBuilder {
                 // schema_type: String::new(),
                 r#type: self.config.r#type,
                 propertiesstate: std::marker::PhantomData,
             },
             envstate: std::marker::PhantomData,
+            instructionstate: std::marker::PhantomData,
             modelstate: std::marker::PhantomData,
             configstate: std::marker::PhantomData,
-            instructionstate: std::marker::PhantomData,
             textstate: std::marker::PhantomData,
+            maxstate: std::marker::PhantomData,
         }
     }
 }
@@ -238,6 +257,7 @@ impl<'text>
         ModelPresent,
         ConfigPresent,
         TextNotPresent,
+        MaxLenNotPresent,
         InstructionPresent,
         PropertiesPresent,
     >
@@ -251,6 +271,7 @@ impl<'text>
         ModelPresent,
         ConfigPresent,
         TextPresent,
+        MaxLenNotPresent,
         InstructionPresent,
         PropertiesPresent,
     > {
@@ -260,6 +281,7 @@ impl<'text>
             model: &self.model,
             text: self.text,
             instruction: self.instruction,
+            max_len: self.max_len,
             config: ConfigBuilder {
                 // schema_type: String::new(),
                 r#type: self.config.r#type,
@@ -270,10 +292,62 @@ impl<'text>
             modelstate: std::marker::PhantomData,
             configstate: std::marker::PhantomData,
             textstate: std::marker::PhantomData,
+            maxstate: std::marker::PhantomData,
         }
     }
 }
 
+impl<'max_len>
+    GeminiContentGenBuilder<
+        'max_len,
+        EnvVariablePresent,
+        ModelPresent,
+        ConfigPresent,
+        TextPresent,
+        MaxLenNotPresent,
+        InstructionPresent,
+        PropertiesPresent,
+    >
+{
+    pub fn max_token(
+        mut self,
+        max: TokenLen,
+    ) -> GeminiContentGenBuilder<
+        'max_len,
+        EnvVariablePresent,
+        ModelPresent,
+        ConfigPresent,
+        TextPresent,
+        MaxLenPresent,
+        InstructionPresent,
+        PropertiesPresent,
+    > {
+        match max {
+            TokenLen::Custome(values) => {
+                self.max_len = values;
+            }
+            TokenLen::Default => self.max_len = 8192,
+        }
+        GeminiContentGenBuilder {
+            env_variable: self.env_variable,
+            model: &self.model,
+            text: self.text,
+            instruction: self.instruction,
+            max_len: self.max_len,
+            config: ConfigBuilder {
+                // schema_type: String::new(),
+                r#type: self.config.r#type,
+                propertiesstate: std::marker::PhantomData,
+            },
+            envstate: std::marker::PhantomData,
+            instructionstate: std::marker::PhantomData,
+            modelstate: std::marker::PhantomData,
+            configstate: std::marker::PhantomData,
+            textstate: std::marker::PhantomData,
+            maxstate: std::marker::PhantomData,
+        }
+    }
+}
 impl<'build>
     GeminiContentGenBuilder<
         'build,
@@ -281,6 +355,7 @@ impl<'build>
         ModelPresent,
         ConfigPresent,
         TextPresent,
+        MaxLenPresent,
         InstructionPresent,
         PropertiesPresent,
     >
@@ -289,6 +364,7 @@ impl<'build>
         GeminiContentGen {
             model: &self.model,
             env_variable: &self.env_variable,
+            max_len: self.max_len,
             text: self.text,
             instruction: &self.instruction,
             config: Config {
@@ -305,14 +381,14 @@ impl<'output> GeminiContentGen<'output> {
 
         match self.config.response {
             Kind::Text => {
-                let response = text(&self.instruction, &self.text);
+                let response = text(&self.instruction, &self.text, self.max_len);
                 // println!("{:?}", response);
                 let response = Self::gemini(response, &self.env_variable, self.model);
                 response
                 // String::new()
             }
             Kind::Json(jsons) => {
-                let response = json(self.instruction, self.text, &jsons);
+                let response = json(self.instruction, self.text, &jsons, self.max_len);
                 // println!("{}", response);
                 let json = Self::gemini(response, &self.env_variable, self.model);
 
@@ -326,7 +402,7 @@ impl<'output> GeminiContentGen<'output> {
                 // let mut image = Vec::new();
                 // images.read_to_end(&mut image);
                 let encode = encode(images);
-                let response = image(self.instruction, self.text, &encode);
+                let response = image(self.instruction, self.text, &encode, self.max_len);
                 Self::gemini(response, &self.env_variable, self.model)
                 // String::new()
             } // Kind::Video(video_path) => {

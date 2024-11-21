@@ -1,15 +1,10 @@
 use gemini_ai::{
-    // cloud::cloud::check_state,
-    decode_gemini,
     format::{key, nested, Function, Parameters, Properties, PropertiesParameter},
-    pulse::pulse::GeminiPulse,
     schema::schema_store,
-    GeminiContentGenBuilder,
-    Pair,
+    GeminiContentGenBuilder, Pair,
 };
 
 fn main() {
-    let value = key("name", "STRING");
     let property = nested(
         "achivements",
         &[
@@ -29,11 +24,12 @@ fn main() {
     let builder = GeminiContentGenBuilder::new()
         .env("GEMINI_API_KEY")
         .model(gemini_ai::Models::GEMINI_1_5_PRO_002)
-        .kind(gemini_ai::Kind::Image("OIP.jpeg"))
+        .kind(gemini_ai::Kind::Image("statics/OIP.jpeg"))
         .instruction(
             "you are great image analyzer and tell the image design accuratly and how it can be made great",
         )
         .text("image")
+        .max_token(gemini_ai::TokenLen::Default)
         .build()
         .output();
     println!("{}", builder);

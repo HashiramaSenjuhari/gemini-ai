@@ -1,6 +1,6 @@
 use crate::Pair;
 
-pub fn json(instruction: &str, text: &str, properties: &str) -> String {
+pub fn json(instruction: &str, text: &str, properties: &str, max_len: u64) -> String {
     let format: String = format!(
         r#"{{
     "system_instruction": {{
@@ -20,17 +20,18 @@ pub fn json(instruction: &str, text: &str, properties: &str) -> String {
             "type": "OBJECT",
             "properties": {
               
-            }
+            },
+            "maxOutputTokens":{}
 }}
 }}
 }}
 }}"#,
-        instruction, text, properties
+        instruction, text, properties, max_len
     );
     format
 }
 
-pub fn text(system_instruction: &str, text: &str) -> String {
+pub fn text(system_instruction: &str, text: &str, max_len: u64) -> String {
     let content = format!(
         "{{ \"system_instruction\": {{
             \"parts\":
@@ -40,15 +41,18 @@ pub fn text(system_instruction: &str, text: &str) -> String {
               \"parts\": {{
                 \"text\": \"{}\"
                 }}
+    }},
+    \"generationConfig\": {{
+    \"maxOutputTokens\": {}
     }}  
     }}",
-        system_instruction, text
+        system_instruction, text, max_len
     );
     println!("{}", content);
     content
 }
 
-pub fn image(instruction: &str, prompt: &str, image: &str) -> String {
+pub fn image(instruction: &str, prompt: &str, image: &str, max_len: u64) -> String {
     let iamge_response = format!(
         "{{
     \"system_instruction\": {{
@@ -65,9 +69,12 @@ pub fn image(instruction: &str, prompt: &str, image: &str) -> String {
           }}
         }}
         ]
-      }}]
+      }}],
+      \"generationConfig\": {{
+    \"maxOutputTokens\": {}
+    }} 
     }}",
-        instruction, prompt, image
+        instruction, prompt, image, max_len
     );
     iamge_response
 }

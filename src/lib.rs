@@ -10,11 +10,17 @@ pub mod schema;
 pub struct GeminiContentGen<'gemini> {
     env_variable: &'gemini str,
     model: &'gemini str,
+    max_len: u64,
     instruction: &'gemini str,
     text: &'gemini str,
     config: Config<'gemini>,
 }
 
+#[derive(Debug)]
+pub enum TokenLen {
+    Default,
+    Custome(u64),
+}
 #[derive(Debug)]
 pub struct Config<'config> {
     pub response: Kind<'config>,
@@ -38,16 +44,19 @@ pub struct GeminiContentGenBuilder<
     ConfigState,
     InstructionState,
     TextState,
+    MaxState,
     PropertiesState,
 > {
     env_variable: &'gemini str,
     model: &'gemini str,
     instruction: &'gemini str,
+    max_len: u64,
     text: &'gemini str,
     config: ConfigBuilder<'gemini, PropertiesState>,
     envstate: std::marker::PhantomData<EnvState>,
     modelstate: std::marker::PhantomData<ModelState>,
     configstate: std::marker::PhantomData<ConfigState>,
+    maxstate: std::marker::PhantomData<MaxState>,
     instructionstate: std::marker::PhantomData<InstructionState>,
     textstate: std::marker::PhantomData<TextState>,
 }
@@ -145,3 +154,6 @@ pub struct InstructionNotPresent;
 
 pub struct TellPresent;
 pub struct TellNotPresent;
+
+pub struct MaxLenPresent;
+pub struct MaxLenNotPresent;

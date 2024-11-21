@@ -6,6 +6,10 @@ Welcome to the **Rust Gemini AI**! This crate provides a Rust interface to inter
 
 ## New Feature Added
 
+- **MaxTokenLimit Based Response**
+
+## Previous New Feature Added
+
 - **Instruction Based Response**
 
 ## Features
@@ -22,7 +26,7 @@ To add this crate to your project, include it in your `Cargo.toml`:
 ```toml
 
    [dependencies]
-   gemini-ai = "0.1"
+   gemini-ai = "0.1.14"
 
 ```
 
@@ -31,14 +35,14 @@ To add this crate to your project, include it in your `Cargo.toml`:
    let builder = GeminiContentGenBuilder::new()
         .env("GEMINI_API_KEY")
         .model(gemini_ai::Models::GEMINI_1_5_PRO_002)
-        .kind(gemini_ai::Kind::Image("OIP.jpeg"))
+        .kind(gemini_ai::Kind::Image("statics/OIP.jpeg"))
         .instruction(
-        "you are great image analyzer and tell the image design accuratly and how it can be made great",
+            "you are great image analyzer and tell the image design accuratly and how it can be made great",
         )
         .text("image")
+        .max_token(gemini_ai::TokenLen::Default)
         .build()
         .output();
-   println!("{}", builder);
 
    let string = decode_gemini(&builder); // optional to decode the output if it sends the reponse else error
 
