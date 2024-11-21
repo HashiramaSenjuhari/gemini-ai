@@ -1,6 +1,6 @@
 [package]
 name = "gemini-ai"
-version = "0.1.15"
+version = "0.1.16"
 edition = "2021"
 authors = ["hariprasath"]
 license = "MIT"
@@ -10,7 +10,7 @@ homepage = "https://gemini.ai"
 description = "A Rust based Gemini AI API, enabling access to advanced natural language processing and multimodal models."
 
 
-keywords = ["gemini", "AI", "multimodal","bard","openai"]
+keywords = ["gemini", "AI", "multimodal", "bard", "openai"]
 
 
 [dependencies]

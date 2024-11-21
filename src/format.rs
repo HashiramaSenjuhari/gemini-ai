@@ -170,25 +170,30 @@ pub struct PropertiesParameter {}
 
 pub fn function_call_format(instruction: &str, format: &str, text: &str) -> String {
     let response = format!(
-        "{{
-    \"system_instruction\": {{
-      \"parts\": {{
-        \"text\": \"{}\"
-}}
-}},
-    \"tools\": [{}],
-
-    \"tool_config\": {{
-      \"function_calling_config\": {{\"mode\": \"none\"}}
-}},
-
-    \"contents\": {{
-      \"role\": \"user\",
-      \"parts\": {{
-        \"text\": \"{}\"
-}}
-}}
-}}",
+        r#"{{
+            "system_instruction": {{
+              "parts": {{
+                "text": "{}"
+                }}
+            }},
+            "tools": [{{
+          "function_declarations": [
+          {}
+          ]
+        }}],
+        
+            "tool_config": {{
+              "function_calling_config": {{"mode": "none"}}
+            }},
+        
+            "contents": {{
+              "role": "user",
+              "parts": {{
+                "text": "{}"
+            }}
+        }}
+    }}
+                "#,
         instruction, format, text
     );
     response

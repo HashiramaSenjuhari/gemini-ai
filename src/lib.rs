@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-// pub mod cloud;
+pub mod cloud;
 pub mod content_gen;
 pub mod format;
 pub mod pulse;
