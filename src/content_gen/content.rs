@@ -16,8 +16,9 @@ use serde::Deserialize;
 use crate::{
     format::{image, json, pdf, text, transcribe},
     Config, ConfigBuilder, ConfigNotPresent, ConfigPresent, EnvVariableNotPresent,
-    EnvVariablePresent, GeminiContentGen, GeminiContentGenBuilder, Kind, ModelNotPresent,
-    ModelPresent, Models, PropertiesNotPresent, PropertiesPresent, TextNotPresent, TextPresent,
+    EnvVariablePresent, GeminiContentGen, GeminiContentGenBuilder, InstructionNotPresent,
+    InstructionPresent, Kind, ModelNotPresent, ModelPresent, Models, PropertiesNotPresent,
+    PropertiesPresent, TextNotPresent, TextPresent,
 };
 
 impl<'gemini>
@@ -27,6 +28,7 @@ impl<'gemini>
         ModelNotPresent,
         ConfigNotPresent,
         TextNotPresent,
+        InstructionNotPresent,
         PropertiesNotPresent,
     >
 {
@@ -35,12 +37,14 @@ impl<'gemini>
             model: "",
             env_variable: "",
             text: "",
+            instruction: "",
             config: ConfigBuilder {
                 // schema_type: String::new(),
                 r#type: Kind::Text,
                 propertiesstate: std::marker::PhantomData,
             },
             envstate: std::marker::PhantomData,
+            instructionstate: std::marker::PhantomData,
             modelstate: std::marker::PhantomData,
             configstate: std::marker::PhantomData,
             textstate: std::marker::PhantomData,
@@ -55,6 +59,7 @@ impl<'gemini>
         ModelNotPresent,
         ConfigNotPresent,
         TextNotPresent,
+        InstructionNotPresent,
         PropertiesNotPresent,
     >
 {
@@ -67,6 +72,7 @@ impl<'gemini>
         ModelNotPresent,
         ConfigNotPresent,
         TextNotPresent,
+        InstructionNotPresent,
         PropertiesNotPresent,
     > {
         self.env_variable = env_variable;
@@ -74,12 +80,14 @@ impl<'gemini>
             env_variable: self.env_variable,
             model: &self.model,
             text: self.text,
+            instruction: &self.instruction,
             config: ConfigBuilder {
                 // schema_type: String::new(),
                 r#type: self.config.r#type,
                 propertiesstate: std::marker::PhantomData,
             },
             envstate: std::marker::PhantomData,
+            instructionstate: std::marker::PhantomData,
             modelstate: std::marker::PhantomData,
             configstate: std::marker::PhantomData,
             textstate: std::marker::PhantomData,
@@ -94,6 +102,7 @@ impl<'gemini>
         ModelNotPresent,
         ConfigNotPresent,
         TextNotPresent,
+        InstructionNotPresent,
         PropertiesNotPresent,
     >
 {
@@ -106,6 +115,7 @@ impl<'gemini>
         ModelPresent,
         ConfigNotPresent,
         TextNotPresent,
+        InstructionNotPresent,
         PropertiesNotPresent,
     > {
         match model {
@@ -120,12 +130,14 @@ impl<'gemini>
             env_variable: self.env_variable,
             model: &self.model,
             text: self.text,
+            instruction: self.instruction,
             config: ConfigBuilder {
                 // schema_type: String::new(),
                 r#type: self.config.r#type,
                 propertiesstate: std::marker::PhantomData,
             },
             envstate: std::marker::PhantomData,
+            instructionstate: std::marker::PhantomData,
             modelstate: std::marker::PhantomData,
             configstate: std::marker::PhantomData,
             textstate: std::marker::PhantomData,
@@ -140,6 +152,7 @@ impl<'properties>
         ModelPresent,
         ConfigNotPresent,
         TextNotPresent,
+        InstructionNotPresent,
         PropertiesNotPresent,
     >
 {
@@ -152,6 +165,7 @@ impl<'properties>
         ModelPresent,
         ConfigPresent,
         TextNotPresent,
+        InstructionNotPresent,
         PropertiesPresent,
     > {
         self.config.r#type = response;
@@ -159,6 +173,50 @@ impl<'properties>
             env_variable: self.env_variable,
             model: &self.model,
             text: self.text,
+            instruction: self.instruction,
+            config: ConfigBuilder {
+                // schema_type: String::new(),
+                r#type: self.config.r#type,
+                propertiesstate: std::marker::PhantomData,
+            },
+            envstate: std::marker::PhantomData,
+            instructionstate: std::marker::PhantomData,
+            modelstate: std::marker::PhantomData,
+            configstate: std::marker::PhantomData,
+            textstate: std::marker::PhantomData,
+        }
+    }
+}
+
+impl<'instruction>
+    GeminiContentGenBuilder<
+        'instruction,
+        EnvVariablePresent,
+        ModelPresent,
+        ConfigPresent,
+        TextNotPresent,
+        InstructionNotPresent,
+        PropertiesPresent,
+    >
+{
+    pub fn instruction(
+        mut self,
+        instruction: &'instruction str,
+    ) -> GeminiContentGenBuilder<
+        'instruction,
+        EnvVariablePresent,
+        ModelPresent,
+        ConfigPresent,
+        TextNotPresent,
+        InstructionPresent,
+        PropertiesPresent,
+    > {
+        self.instruction = instruction;
+        GeminiContentGenBuilder {
+            env_variable: self.env_variable,
+            model: &self.model,
+            text: self.text,
+            instruction: self.instruction,
             config: ConfigBuilder {
                 // schema_type: String::new(),
                 r#type: self.config.r#type,
@@ -167,6 +225,7 @@ impl<'properties>
             envstate: std::marker::PhantomData,
             modelstate: std::marker::PhantomData,
             configstate: std::marker::PhantomData,
+            instructionstate: std::marker::PhantomData,
             textstate: std::marker::PhantomData,
         }
     }
@@ -179,6 +238,7 @@ impl<'text>
         ModelPresent,
         ConfigPresent,
         TextNotPresent,
+        InstructionPresent,
         PropertiesPresent,
     >
 {
@@ -191,6 +251,7 @@ impl<'text>
         ModelPresent,
         ConfigPresent,
         TextPresent,
+        InstructionPresent,
         PropertiesPresent,
     > {
         self.text = text;
@@ -198,12 +259,14 @@ impl<'text>
             env_variable: self.env_variable,
             model: &self.model,
             text: self.text,
+            instruction: self.instruction,
             config: ConfigBuilder {
                 // schema_type: String::new(),
                 r#type: self.config.r#type,
                 propertiesstate: std::marker::PhantomData,
             },
             envstate: std::marker::PhantomData,
+            instructionstate: std::marker::PhantomData,
             modelstate: std::marker::PhantomData,
             configstate: std::marker::PhantomData,
             textstate: std::marker::PhantomData,
@@ -218,6 +281,7 @@ impl<'build>
         ModelPresent,
         ConfigPresent,
         TextPresent,
+        InstructionPresent,
         PropertiesPresent,
     >
 {
@@ -226,6 +290,7 @@ impl<'build>
             model: &self.model,
             env_variable: &self.env_variable,
             text: self.text,
+            instruction: &self.instruction,
             config: Config {
                 response: self.config.r#type,
                 // // schema_type: self.config.schema_type,
@@ -240,14 +305,14 @@ impl<'output> GeminiContentGen<'output> {
 
         match self.config.response {
             Kind::Text => {
-                let response = text(&self.text);
-                // println!("{:?}", json);
+                let response = text(&self.instruction, &self.text);
+                // println!("{:?}", response);
                 let response = Self::gemini(response, &self.env_variable, self.model);
                 response
                 // String::new()
             }
             Kind::Json(jsons) => {
-                let response = json(self.text, &jsons);
+                let response = json(self.instruction, self.text, &jsons);
                 // println!("{}", response);
                 let json = Self::gemini(response, &self.env_variable, self.model);
 
@@ -261,7 +326,7 @@ impl<'output> GeminiContentGen<'output> {
                 // let mut image = Vec::new();
                 // images.read_to_end(&mut image);
                 let encode = encode(images);
-                let response = image(self.text, &encode);
+                let response = image(self.instruction, self.text, &encode);
                 Self::gemini(response, &self.env_variable, self.model)
                 // String::new()
             } // Kind::Video(video_path) => {

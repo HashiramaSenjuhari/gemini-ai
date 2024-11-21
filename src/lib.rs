@@ -1,13 +1,16 @@
 use serde::{Deserialize, Serialize};
 
+pub mod cloud;
 pub mod content_gen;
 pub mod format;
+pub mod pulse;
 pub mod schema;
 
 #[derive(Debug)]
 pub struct GeminiContentGen<'gemini> {
     env_variable: &'gemini str,
     model: &'gemini str,
+    instruction: &'gemini str,
     text: &'gemini str,
     config: Config<'gemini>,
 }
@@ -33,16 +36,19 @@ pub struct GeminiContentGenBuilder<
     EnvState,
     ModelState,
     ConfigState,
+    InstructionState,
     TextState,
     PropertiesState,
 > {
     env_variable: &'gemini str,
     model: &'gemini str,
+    instruction: &'gemini str,
     text: &'gemini str,
     config: ConfigBuilder<'gemini, PropertiesState>,
     envstate: std::marker::PhantomData<EnvState>,
     modelstate: std::marker::PhantomData<ModelState>,
     configstate: std::marker::PhantomData<ConfigState>,
+    instructionstate: std::marker::PhantomData<InstructionState>,
     textstate: std::marker::PhantomData<TextState>,
 }
 
@@ -130,3 +136,12 @@ pub struct Pair<'key> {
     pub key: &'key str,
     pub r#type: &'key str,
 }
+
+pub struct TrainPresent;
+pub struct TrainNotPresent;
+
+pub struct InstructionPresent;
+pub struct InstructionNotPresent;
+
+pub struct TellPresent;
+pub struct TellNotPresent;
