@@ -7,6 +7,8 @@ Welcome to the **Rust Gemini AI**! This crate provides a Rust interface to inter
 
 ## New Feature Added
 
+- **Added Pdf,Audio,Video Uploading feature**
+
 - **Added Function Calling Feature**
 
 - **MaxTokenLimit Based Response**
@@ -33,7 +35,7 @@ To add this crate to your project, include it in your `Cargo.toml`:
 ```toml
 
    [dependencies]
-   gemini-ai = "0.1.14"
+   gemini-ai = "0.1.161"
 
 ```
 
