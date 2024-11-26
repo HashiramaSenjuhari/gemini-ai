@@ -32,14 +32,14 @@ Welcome to the **Rust Gemini AI**! This crate provides a Rust interface to inter
 
 To add this crate to your project, include it in your `Cargo.toml`:
 
-```toml
+```rust
 
    [dependencies]
    gemini-ai = "0.1.161"
 
 ```
 
-```toml
+```rust
 
    let builder = GeminiContentGenBuilder::new()
         .env("GEMINI_API_KEY")
@@ -57,7 +57,7 @@ To add this crate to your project, include it in your `Cargo.toml`:
 
 ```
 
-```toml
+```rust
 
    let feature1 = Properties::new(
         "get_current_place_detail",
@@ -77,7 +77,7 @@ To add this crate to your project, include it in your `Cargo.toml`:
 
 ```
 
-```toml
+```rust
 
    let pluse = GeminiPulse::new()
       .env("GEMINI_API_KEY")

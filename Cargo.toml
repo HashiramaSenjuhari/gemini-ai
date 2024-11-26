@@ -1,12 +1,12 @@
 [package]
 name = "gemini-ai"
-version = "0.1.161"
+version = "0.1.162"
 edition = "2021"
 authors = ["hariprasath"]
 license = "MIT"
 repository = "https://github.com/HashiramaSenjuhari/gemini-ai"
 documentation = "https://docs.rs/gemini-ai"
-homepage = "https://gemini.ai"
+homepage = "https://crates.io/crates/gemini-ai"
 description = "A Rust based Gemini AI API, enabling access to advanced natural language processing and multimodal models."
 
 
