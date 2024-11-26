@@ -25,7 +25,7 @@ Welcome to the **Rust Gemini AI**! This crate provides a Rust interface to inter
 
 - **Instruction Processing**: Based on instruction customize the response in the way you like.
 - **Natural Language Processing**: Access powerful language models like Gemini 1.5 Pro for advanced text analysis, summarization, and generation.
-- **Multimodal Capabilities**: Interact with Gemini models that can handle not only text but also images, audio, and video inputs.
+- **Multimodal Capabilities**: Interact with Gemini models that can handle not only text but also images, audio,pdf, and video inputs.
 - **Easy Integration**: A straightforward API wrapper for easy integration into your Rust projects.
 
 ## Installation
