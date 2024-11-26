@@ -48,7 +48,7 @@ To add this crate to your project, include it in your `Cargo.toml`:
         .instruction(
             "you are great image analyzer and tell the image design accuratly and how it can be made great",
         )
-        .text("image")
+        .text("descibe image")
         .max_token(gemini_ai::TokenLen::Default)
         .build()
         .output();
@@ -58,8 +58,9 @@ To add this crate to your project, include it in your `Cargo.toml`:
 ```
 
 ```rust
+    //eg function calling
 
-   let feature1 = Properties::new(
+    let feature1 = Properties::new(
         "get_current_place_detail",
         "current palce details",
         Some(gemini_ai::pulse::format::Paramters {
@@ -74,10 +75,6 @@ To add this crate to your project, include it in your `Cargo.toml`:
     );
 
     let feature = feature(&[&feature1]);
-
-```
-
-```rust
 
    let pluse = GeminiPulse::new()
       .env("GEMINI_API_KEY")
