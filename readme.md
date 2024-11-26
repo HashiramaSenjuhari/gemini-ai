@@ -87,3 +87,17 @@ To add this crate to your project, include it in your `Cargo.toml`:
       .output();
 
 ```
+
+```rust
+
+    let builder = GeminiContentGenBuilder::new()
+            .env("GEMINI_API_KEY")
+            .model(gemini_ai::Models::GEMINI_1_5_PRO_002)
+            .kind(gemini_ai::Kind::Audio("statics/video.mp4"))
+            .instruction("transcribe video")
+            .text("what he is saying")
+            .max_token(gemini_ai::TokenLen::Default)
+            .build()
+            .output();
+
+```

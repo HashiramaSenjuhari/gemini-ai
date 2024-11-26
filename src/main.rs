@@ -2,14 +2,12 @@ use base64::encode;
 use csv::Reader;
 use dotenv::dotenv;
 use gemini_ai::{
-    file::{bigfile::VideoFile, file::File},
     format::{nested, text},
     pulse::{
         format::{feature, Properties},
         pulse::GeminiPulse,
     },
     schema::schema_store,
-    tunemodel::mode::TuneModel,
     GeminiContentGenBuilder, Pair,
 };
 use native_tls::TlsConnector;
