@@ -113,6 +113,7 @@ impl<'model>
             Models::GEMINI_1_5_FLASH_8B => self.model.push("gemini-1.5-flash-8b"),
             Models::GEMINI_1_5_PRO => self.model.push("gemini-1.5-pro"),
             Models::GEMINI_1_5_PRO_002 => self.model.push("gemini-1.5-pro-002"),
+            Models::Custom(model) => self.model.push(""),
         }
         GeminiPulse {
             env: self.env,

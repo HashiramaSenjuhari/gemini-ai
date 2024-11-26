@@ -2,9 +2,11 @@ use serde::{Deserialize, Serialize};
 
 // pub mod cloud;
 pub mod content_gen;
+pub mod file;
 pub mod format;
 pub mod pulse;
 pub mod schema;
+pub mod tunemodel;
 
 #[derive(Debug)]
 pub struct GeminiContentGen<'gemini> {
@@ -30,10 +32,12 @@ pub struct Config<'config> {
 pub enum Kind<'response> {
     Json(&'response str),
     Text,
-    // Transcribe(&'response str),
+    Audio(&'response str),
+    Transcribe(&'response str),
     Image(&'response str),
-    // Video(&'response str),
-    // Pdf(&'response str),
+    Video(&'response str),
+    Pdf(&'response str),
+    // GroundSearch,
 }
 
 #[derive(Debug)]
@@ -75,13 +79,14 @@ pub struct Properties {
 }
 
 #[derive(Debug)]
-pub enum Models {
+pub enum Models<'model> {
     GEMINI_1_5_FLASH,
     GEMINI_1_5_PRO_002,
     GEMINI_1_5_PRO,
     GEMINI_1_5_FLASH_002,
     GEMINI_1_5_FLASH_8B,
     GEMINI_1_0_PRO,
+    Custom(&'model str),
 }
 
 #[derive(Debug)]

@@ -48,7 +48,7 @@ pub fn text(system_instruction: &str, text: &str, max_len: u64) -> String {
     }}",
         system_instruction, text, max_len
     );
-    println!("{}", content);
+    // println!("{}", content);
     content
 }
 
@@ -79,16 +79,21 @@ pub fn image(instruction: &str, prompt: &str, image: &str, max_len: u64) -> Stri
     iamge_response
 }
 
-pub fn video(prompt: &str, video_path: &str, mime_type: &str) -> String {
+pub fn video(prompt: &str, video: &str) -> String {
     let response = format!(
         "  {{\"contents\": [{{
         \"parts\":[
           {{\"text\": \"{}\"}},
-          {{\"file_data\":{{\"mime_type\": \"{}\", \"file_uri\": \"{}\"}}}}
+          {{
+            \"inline_data\": {{
+              \"mime_type\":\"video/mp4\",
+              \"data\": \"{}\"
+          }}
+        }}
           ]
           }}]
           }}",
-        prompt, mime_type, video_path
+        prompt, video
     );
     response
 }
@@ -100,7 +105,12 @@ pub fn transcribe(prompt: &str, video_path: &str) -> String {
     \"parts\":[
       {{\"text\": \"Transcribe the audio from this video, giving timestamps for salient events in the video. Also provide visual descriptions.and {}\"
       }},
-      {{\"file_data\":{{\"mime_type\": \"video/mp4\", \"file_uri\": \"{}\"}}
+      {{
+            \"inline_data\": {{
+              \"mime_type\":\"video/mp4\",
+              \"data\": \"{}\"
+          }}
+        }}
       }}
       ]
     }}
@@ -117,14 +127,102 @@ pub fn pdf(prompt: &str, path: &str) -> String {
       \"contents\": [{{
         \"parts\":[
           {{\"text\": \"{}\"}},
-          {{\"file_data\":{{\"mime_type\": \"application/pdf\", \"file_uri\": \"{}\"}}}}
+          {{
+            \"inline_data\": {{
+              \"mime_type\":\"application/pdf\",
+              \"data\": \"{}\"
+          }}
+        }}
           ]
 }}]
 }}",
         prompt, path
     );
-    println!("{}", pdf);
+    // println!("{}", pdf);
     pdf
+}
+
+pub fn audio(prompt: &str, file_uri: &str) -> String {
+    let audio = format!(
+        r#"{{
+      "contents": [{{
+        "parts":[
+          {{"text": "{}"}},
+          {{
+            "inline_data": {{
+              "mime_type":"audio/mpeg",
+              "data": "{}"
+          }}
+        }}
+          ]
+        }}]
+    }}
+    "#,
+        prompt, file_uri
+    );
+    println!("{}", audio);
+    audio
+}
+pub fn search(instruction: &str, prompt: &str) -> String {
+    let search = format!(
+        r#"{{
+    "system_instruction": {{
+            "parts":{{ "text": "{}"}}
+    }},
+ "contents":
+        [{{
+          "parts":
+           [{{ 
+            "text": "{}" 
+            }}]
+        }}],
+      "tools": [{{
+      "google_search_retrieval": {{
+                  "dynamic_retrieval_config": {{
+                    "mode": "MODE_DYNAMIC",
+                    "dynamic_threshold": 1,
+        }}
+        }}
+        }}]
+    }}
+    "#,
+        instruction, prompt
+    );
+    search
+}
+
+pub fn training_model(
+    tuningmodename: &str,
+    model: &str,
+    batch: u64,
+    learning_rate: f64,
+    epoch: u64,
+    example: &str,
+) -> String {
+    let response = format!(
+        r#"
+    {{
+        "display_name": "{}",
+        "base_model": "{}",
+        "tuning_task": {{
+          "hyperparameters": {{
+            "batch_size": {},
+            "learning_rate": {},
+            "epoch_count":{},
+    }},
+          "training_data": {{
+            "examples": {{
+              "examples": [
+                {}
+              ]
+    }}
+    }}
+    }}
+    }}
+    "#,
+        tuningmodename, model, batch, learning_rate, epoch, example
+    );
+    response
 }
 
 pub fn key(key: &str, r#type: &str) -> String {
