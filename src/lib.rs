@@ -2,11 +2,11 @@ use serde::{Deserialize, Serialize};
 
 // pub mod cloud;
 pub mod content_gen;
-pub mod file;
+// pub mod file;
 pub mod format;
 pub mod pulse;
 pub mod schema;
-pub mod tunemodel;
+// pub mod tunemodel;
 
 #[derive(Debug)]
 pub struct GeminiContentGen<'gemini> {
