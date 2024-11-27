@@ -37,6 +37,7 @@ pub enum Kind<'response> {
     Image(&'response str),
     Video(&'response str),
     Pdf(&'response str),
+    Csv(&'response str),
     // GroundSearch,
 }
 

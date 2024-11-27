@@ -75,12 +75,16 @@ fn main() {
     // let model = train.name;
     // println!("{:?}", model);
 
+    // let c = fs::read("MOCK_DATA.csv").unwrap();
+    // let string = String::from_utf8_lossy(&c);
+    // println!("{:?}", string);
+
     let builder = GeminiContentGenBuilder::new()
         .env("GEMINI_API_KEY")
         .model(gemini_ai::Models::GEMINI_1_5_PRO_002)
-        .kind(gemini_ai::Kind::Audio("statics/video.mp4"))
-        .instruction("transcribe video")
-        .text("what he is saying")
+        .kind(gemini_ai::Kind::Csv("MOCK_DATA.csv"))
+        .instruction("filter the person in graph")
+        .text("filter the number of person has complted only high school")
         .max_token(gemini_ai::TokenLen::Default)
         .build()
         .output();

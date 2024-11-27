@@ -14,7 +14,7 @@ use native_tls::TlsConnector;
 use serde::Deserialize;
 
 use crate::{
-    format::{audio, image, json, pdf, search, text, transcribe, video},
+    format::{audio, csv, image, json, pdf, search, text, transcribe, video},
     Config, ConfigBuilder, ConfigNotPresent, ConfigPresent, EnvVariableNotPresent,
     EnvVariablePresent, GeminiContentGen, GeminiContentGenBuilder, InstructionNotPresent,
     InstructionPresent, Kind, MaxLenNotPresent, MaxLenPresent, ModelNotPresent, ModelPresent,
@@ -442,6 +442,13 @@ impl<'output> GeminiContentGen<'output> {
 
                 let video = video(&self.text, &videoo);
                 Self::gemini(video, &self.env_variable, self.model, "video/mp4")
+            }
+            Kind::Csv(path) => {
+                let path = fs::read(path).unwrap();
+                let csv_file = encode(path);
+
+                let send = csv(self.text, &csv_file);
+                Self::gemini(send, self.env_variable, self.model, "application/json")
             } // Kind::GroundSearch => {
               //     let path = search(&self.text, self.instruction);
               //     println!("{}", path);

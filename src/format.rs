@@ -163,6 +163,27 @@ pub fn audio(prompt: &str, file_uri: &str) -> String {
     // println!("{}", audio);
     audio
 }
+
+pub fn csv(prompt: &str, file_uri: &str) -> String {
+    let audio = format!(
+        r#"{{
+  "contents": [{{
+    "parts":[
+      {{"text": "{}"}},
+      {{
+        "inline_data": {{
+          "mime_type":"text/plain",
+          "data": "{}"
+      }}
+    }}
+      ]
+    }}]
+}}
+"#,
+        prompt, file_uri
+    );
+    audio
+}
 pub fn search(instruction: &str, prompt: &str) -> String {
     let search = format!(
         r#"{{
