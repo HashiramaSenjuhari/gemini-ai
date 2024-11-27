@@ -199,7 +199,7 @@ impl<'file> VideoFile<'file, FolderNamePresent, FileNamePresent, FileTypePresent
     fn upload_pdf(route: &str, file_size: u64, file: Vec<u8>, env: &str) {
         let mut is_not_active = true;
         while is_not_active {
-            println!("{}", "1");
+            // println!("{}", "1");
             let active = Self::upload(route, file_size, file.clone(), is_not_active);
             // is_not_active = active
         }
@@ -226,7 +226,7 @@ impl<'file> VideoFile<'file, FolderNamePresent, FileNamePresent, FileTypePresent
         let mut url = String::new();
         for lines in buffer.lines() {
             let line = lines.unwrap();
-            println!("{}", line);
+            // println!("{}", line);
             if line.trim().starts_with("\"uri\"") {
                 let uri = line.split(": ").nth(1).unwrap().trim();
                 url.push_str(uri);
@@ -234,7 +234,7 @@ impl<'file> VideoFile<'file, FolderNamePresent, FileNamePresent, FileTypePresent
             if line.trim().starts_with("\"state\"") {
                 let uri = line.split(": ").nth(1).unwrap().trim();
                 if uri == "\"ACTIVE\"" {
-                    println!("{}", url);
+                    // println!("{}", url);
                     active = false;
                     break;
                 } else {

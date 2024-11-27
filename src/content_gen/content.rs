@@ -470,7 +470,7 @@ impl<'output> GeminiContentGen<'output> {
             content.len(),
             content
         );
-        println!("{}", models);
+        // println!("{}", models);
         stream.write_all(models.as_bytes());
         stream.flush();
 
@@ -492,7 +492,7 @@ impl<'output> GeminiContentGen<'output> {
         loop {
             let mut line = String::new();
             reader.read_line(&mut line);
-            println!("{}", line);
+            // println!("{}", line);
 
             let size = usize::from_str_radix(&line.trim(), 16).unwrap();
             if size == 0 {
@@ -503,7 +503,7 @@ impl<'output> GeminiContentGen<'output> {
             reader.read_exact(&mut esponse);
             let response = String::from_utf8_lossy(&esponse);
             body.push_str(&response);
-            println!("{}", response);
+            // println!("{}", response);
 
             let mut trail = vec![0; 2];
             reader.read_exact(&mut trail);

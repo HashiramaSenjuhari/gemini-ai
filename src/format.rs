@@ -160,7 +160,7 @@ pub fn audio(prompt: &str, file_uri: &str) -> String {
     "#,
         prompt, file_uri
     );
-    println!("{}", audio);
+    // println!("{}", audio);
     audio
 }
 pub fn search(instruction: &str, prompt: &str) -> String {

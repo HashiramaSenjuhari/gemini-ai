@@ -47,7 +47,7 @@ pub fn feature(features: &[&str]) -> String {
         feature.push_str(&format);
     }
     let feature = feature.trim_end_matches(",");
-    println!("{}", feature);
+    // println!("{}", feature);
     feature.to_string()
 }
 

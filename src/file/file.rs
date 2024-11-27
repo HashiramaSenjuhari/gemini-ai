@@ -170,7 +170,7 @@ impl<'file> File<'file, FolderNamePresent, FileNamePresent, FileTypePresent, Env
         let mut response = String::new();
         for line in buffer.by_ref().lines() {
             let line = line.unwrap();
-            println!("{}",line);
+            // println!("{}",line);
             if line.trim().starts_with("X-Goog-Upload-URL") {
                 let line = line
                     .split(": ")
