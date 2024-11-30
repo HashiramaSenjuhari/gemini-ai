@@ -2,6 +2,7 @@ use base64::encode;
 use csv::Reader;
 use dotenv::dotenv;
 use gemini_ai::{
+    decode_gemini,
     format::{nested, text},
     pulse::{
         format::{feature, Properties},
@@ -88,7 +89,7 @@ fn main() {
         .max_token(gemini_ai::TokenLen::Default)
         .build()
         .output();
-
+    // decode_gemini(response);
     println!("{}", builder);
 
     // let feature1 = Properties::new(

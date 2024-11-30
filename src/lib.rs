@@ -142,8 +142,8 @@ pub struct Responses {
     modelVersion: String,
 }
 
-pub fn decode_gemini(response: &str) -> Responses {
-    let response = serde_json::from_str::<Responses>(response).unwrap();
+pub fn decode_gemini(response: &str) -> Result<Responses, serde_json::Error> {
+    let response = serde_json::from_str::<Responses>(response);
     response
 }
 
