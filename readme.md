@@ -35,7 +35,7 @@ To add this crate to your project, include it in your `Cargo.toml`:
 ```rust
 
    [dependencies]
-   gemini-ai = "0.1.161"
+   gemini-ai = "0.1.166"
 
 ```
 
