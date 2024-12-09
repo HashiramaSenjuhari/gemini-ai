@@ -2,3 +2,4 @@
 /statics
 .env
 cloud
+/urls

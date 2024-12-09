@@ -52,53 +52,7 @@ pub fn text(system_instruction: &str, text: &str, max_len: u64) -> String {
     content
 }
 
-pub fn image(instruction: &str, prompt: &str, image: &str, max_len: u64) -> String {
-    let iamge_response = format!(
-        "{{
-    \"system_instruction\": {{
-            \"parts\":
-              {{ \"text\": \"{}\"}}
-    }},
-      \"contents\": [{{
-        \"parts\":[
-          {{\"text\": \"{}\"}},
-          {{
-            \"inline_data\": {{
-              \"mime_type\":\"image/jpeg\",
-              \"data\": \"{}\"
-          }}
-        }}
-        ]
-      }}],
-      \"generationConfig\": {{
-    \"maxOutputTokens\": {}
-    }} 
-    }}",
-        instruction, prompt, image, max_len
-    );
-    iamge_response
-}
-
-pub fn video(prompt: &str, video: &str) -> String {
-    let response = format!(
-        "  {{\"contents\": [{{
-        \"parts\":[
-          {{\"text\": \"{}\"}},
-          {{
-            \"inline_data\": {{
-              \"mime_type\":\"video/mp4\",
-              \"data\": \"{}\"
-          }}
-        }}
-          ]
-          }}]
-          }}",
-        prompt, video
-    );
-    response
-}
-
-pub fn transcribe(prompt: &str, video_path: &str) -> String {
+pub fn transcribe(prompt: &str, video_path: &str, max_len: u64) -> String {
     let response = format!("  {{\"contents\": 
     [
     {{
@@ -114,75 +68,70 @@ pub fn transcribe(prompt: &str, video_path: &str) -> String {
       }}
       ]
     }}
-    ]
-      }}",prompt,video_path);
+    ],
+          \"generationConfig\": {{
+    \"maxOutputTokens\": {}
+    }} 
+      }}",prompt,video_path,max_len);
 
     // println!("{}", response);
     response
 }
 
-pub fn pdf(prompt: &str, path: &str) -> String {
-    let pdf = format!(
-        "{{
-      \"contents\": [{{
-        \"parts\":[
-          {{\"text\": \"{}\"}},
-          {{
-            \"inline_data\": {{
-              \"mime_type\":\"application/pdf\",
-              \"data\": \"{}\"
-          }}
-        }}
-          ]
-}}]
-}}",
-        prompt, path
-    );
-    // println!("{}", pdf);
-    pdf
-}
-
-pub fn audio(prompt: &str, file_uri: &str) -> String {
-    let audio = format!(
+pub fn schema(
+    instruction: &str,
+    prompt: &str,
+    mime_type: &str,
+    source: &str,
+    max_len: u64,
+) -> String {
+    let rag = format!(
         r#"{{
-      "contents": [{{
-        "parts":[
-          {{"text": "{}"}},
-          {{
-            "inline_data": {{
-              "mime_type":"audio/mpeg",
-              "data": "{}"
-          }}
-        }}
-          ]
-        }}]
-    }}
-    "#,
-        prompt, file_uri
-    );
-    // println!("{}", audio);
-    audio
-}
-
-pub fn csv(prompt: &str, file_uri: &str) -> String {
-    let audio = format!(
-        r#"{{
-  "contents": [{{
-    "parts":[
-      {{"text": "{}"}},
-      {{
-        "inline_data": {{
-          "mime_type":"text/plain",
-          "data": "{}"
-      }}
-    }}
-      ]
-    }}]
+        "system_instruction": {{
+        "parts":{{ "text": "{}"}}
+}},
+"contents": [{{
+"parts":[
+  {{"text": "{}"}},
+  {{
+    "inline_data": {{
+      "mime_type":"{}",
+      "data": "{}"
+  }}
+}}
+  ]
+}}],
+      "generationConfig": {{
+"maxOutputTokens": {}
+}} 
 }}
 "#,
-        prompt, file_uri
+        instruction, prompt, mime_type, &source, max_len
     );
-    audio
+    rag
+}
+
+pub fn memory_schema(prompt: &str, parts: &str, max_len: u64) -> String {
+    let response = format!(
+        "{{ \"system_instruction\": {{
+            \"parts\":
+              {{ \"text\": \"{}\"}}
+    }},
+            \"contents\": [
+    {{
+      \"role\": \"user\",
+      \"parts\": [
+    {}
+      ]
+    }}
+    ],
+    \"generationConfig\": {{
+    \"maxOutputTokens\": {}
+    }}  
+    }}",
+        prompt, parts, max_len
+    );
+    response
 }
 pub fn search(instruction: &str, prompt: &str) -> String {
     let search = format!(

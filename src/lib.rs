@@ -8,7 +8,7 @@ pub mod pulse;
 pub mod schema;
 // pub mod tunemodel;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct GeminiContentGen<'gemini> {
     env_variable: &'gemini str,
     model: &'gemini str,
@@ -16,6 +16,7 @@ pub struct GeminiContentGen<'gemini> {
     instruction: &'gemini str,
     text: &'gemini str,
     config: Config<'gemini>,
+    memory: MemoryType,
 }
 
 #[derive(Debug)]
@@ -23,12 +24,12 @@ pub enum TokenLen {
     Default,
     Custome(u64),
 }
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Config<'config> {
     pub response: Kind<'config>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Kind<'response> {
     Json(&'response str),
     Text,
@@ -38,7 +39,7 @@ pub enum Kind<'response> {
     Video(&'response str),
     Pdf(&'response str),
     Csv(&'response str),
-    // GroundSearch,
+    Rag(&'response [&'response str]),
 }
 
 #[derive(Debug)]
@@ -51,12 +52,14 @@ pub struct GeminiContentGenBuilder<
     TextState,
     MaxState,
     PropertiesState,
+    MemoryState,
 > {
     env_variable: &'gemini str,
     model: &'gemini str,
     instruction: &'gemini str,
     max_len: u64,
     text: &'gemini str,
+    memory: MemoryType,
     config: ConfigBuilder<'gemini, PropertiesState>,
     envstate: std::marker::PhantomData<EnvState>,
     modelstate: std::marker::PhantomData<ModelState>,
@@ -64,6 +67,7 @@ pub struct GeminiContentGenBuilder<
     maxstate: std::marker::PhantomData<MaxState>,
     instructionstate: std::marker::PhantomData<InstructionState>,
     textstate: std::marker::PhantomData<TextState>,
+    memorystate: std::marker::PhantomData<MemoryState>,
 }
 
 #[derive(Debug)]
@@ -110,6 +114,23 @@ pub struct ConfigNotPresent;
 #[derive(Debug)]
 pub struct PropertiesPresent;
 pub struct PropertiesNotPresent;
+
+pub struct Memory;
+
+pub struct Default;
+
+#[derive(Debug, Clone)]
+pub enum MemoryType {
+    Memory(Memorys),
+    NoMemory,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum Memorys {
+    File,
+    Json,
+    // Database,
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Candidate {
@@ -163,3 +184,6 @@ pub struct TellNotPresent;
 
 pub struct MaxLenPresent;
 pub struct MaxLenNotPresent;
+
+pub struct MemoryOK;
+pub struct MemoryNot;

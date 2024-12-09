@@ -2,6 +2,7 @@ use base64::encode;
 use csv::Reader;
 use dotenv::dotenv;
 use gemini_ai::{
+    content_gen::rag_search::{domain, search},
     decode_gemini,
     format::{nested, text},
     pulse::{
@@ -83,12 +84,15 @@ fn main() {
     let builder = GeminiContentGenBuilder::new()
         .env("GEMINI_API_KEY")
         .model(gemini_ai::Models::GEMINI_1_5_PRO_002)
-        .kind(gemini_ai::Kind::Csv("MOCK_DATA.csv"))
-        .instruction("filter the person in graph")
-        .text("filter the number of person has complted only high school")
+        // .memory(gemini_ai::Memorys::Json)
+        .no_memory()
+        .kind(gemini_ai::Kind::Image("statics/OIP.jpeg"))
+        .instruction("tell hi")
+        .text("hi tell character name")
         .max_token(gemini_ai::TokenLen::Default)
         .build()
         .output();
+
     // decode_gemini(response);
     println!("{}", builder);
 
