@@ -7,6 +7,8 @@ Welcome to the **Rust Gemini AI**! This crate provides a Rust interface to inter
 
 ## New Feature Added
 
+- **Added Rag Concept Model**
+
 - **Added Pdf,Audio,Video Uploading feature**
 
 - **Added Function Calling Feature**
