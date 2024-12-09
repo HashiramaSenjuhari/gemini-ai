@@ -35,31 +35,28 @@ To add this crate to your project, include it in your `Cargo.toml`:
 ```rust
 
    [dependencies]
-   gemini-ai = "0.1.166"
+   gemini-ai = "0.1.167"
 
 ```
 
 ```rust
-
-   let builder = GeminiContentGenBuilder::new()
+       let builder = GeminiContentGenBuilder::new()
         .env("GEMINI_API_KEY")
         .model(gemini_ai::Models::GEMINI_1_5_PRO_002)
+        // .memory(gemini_ai::Memorys::Json)
+        .no_memory()
         .kind(gemini_ai::Kind::Image("statics/OIP.jpeg"))
-        .instruction(
-            "you are great image analyzer and tell the image design accuratly and how it can be made great",
-        )
-        .text("descibe image")
+        .instruction("")
+        .text("hi tell character name")
         .max_token(gemini_ai::TokenLen::Default)
         .build()
         .output();
 
    let string = decode_gemini(&builder); // optional to decode the output if it sends the reponse else error
-
 ```
 
 ```rust
     //eg function calling
-
     let feature1 = Properties::new(
         "get_current_place_detail",
         "current palce details",
@@ -88,15 +85,15 @@ To add this crate to your project, include it in your `Cargo.toml`:
 ```
 
 ```rust
-
-    let builder = GeminiContentGenBuilder::new()
-            .env("GEMINI_API_KEY")
-            .model(gemini_ai::Models::GEMINI_1_5_PRO_002)
-            .kind(gemini_ai::Kind::Audio("statics/video.mp4"))
-            .instruction("transcribe video")
-            .text("what he is saying")
-            .max_token(gemini_ai::TokenLen::Default)
-            .build()
-            .output();
-
+        let builder = GeminiContentGenBuilder::new()
+        .env("GEMINI_API_KEY")
+        .model(gemini_ai::Models::GEMINI_1_5_PRO_002)
+        // .memory(gemini_ai::Memorys::Json)
+        .no_memory()
+        .kind(gemini_ai::Kind::Audio("statics/OIP.mpeg"))
+        .instruction("tell hi")
+        .text("hi tell character name")
+        .max_token(gemini_ai::TokenLen::Default)
+        .build()
+        .output();
 ```
