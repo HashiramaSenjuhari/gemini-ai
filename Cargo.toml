@@ -1,6 +1,6 @@
 [package]
 name = "gemini-ai"
-version = "0.1.167"
+version = "0.1.1671"
 edition = "2021"
 authors = ["hariprasath"]
 license = "MIT"

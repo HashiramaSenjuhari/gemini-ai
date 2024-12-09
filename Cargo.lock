@@ -123,22 +123,7 @@ checksum = "00b0228411908ca8685dba7fc2cdd70ec9990a6e753e89b6ac91a84c40fbaf4b"
 
 [[package]]
 name = "gemini-ai"
-version = "0.1.166"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7b7eb0e926ad79f5d0cc12366516182ef194cda3d3ba68680ede68464128bc11"
-dependencies = [
- "base64",
- "csv",
- "dotenv",
- "http-scrap",
- "native-tls",
- "serde",
- "serde_json",
-]
-
-[[package]]
-name = "gemini-ai"
-version = "0.1.167"
+version = "0.1.1671"
 dependencies = [
  "base64",
  "csv",
@@ -322,12 +307,11 @@ dependencies = [
 
 [[package]]
 name = "rusty-scrap"
-version = "0.1.8"
+version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "be1dfc22ea5ae19901a34efb34d72cf6c16a1cbe00f0b4316360d9bd847cb2f1"
+checksum = "855e26ffc67123024e148663bb19a3b1d132bb0680bc78469d2bc4df583266f4"
 dependencies = [
  "ZuckGate",
- "gemini-ai 0.1.166",
  "http-scrap",
  "native-tls",
  "regex",
