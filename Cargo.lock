@@ -123,21 +123,6 @@ checksum = "00b0228411908ca8685dba7fc2cdd70ec9990a6e753e89b6ac91a84c40fbaf4b"
 
 [[package]]
 name = "gemini-ai"
-version = "0.1.2"
-dependencies = [
- "base64",
- "csv",
- "dotenv",
- "http-scrap",
- "native-tls",
- "regex",
- "rusty-scrap",
- "serde",
- "serde_json",
-]
-
-[[package]]
-name = "gemini-ai"
 version = "0.1.166"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7b7eb0e926ad79f5d0cc12366516182ef194cda3d3ba68680ede68464128bc11"
@@ -147,6 +132,21 @@ dependencies = [
  "dotenv",
  "http-scrap",
  "native-tls",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "gemini-ai"
+version = "0.1.167"
+dependencies = [
+ "base64",
+ "csv",
+ "dotenv",
+ "http-scrap",
+ "native-tls",
+ "regex",
+ "rusty-scrap",
  "serde",
  "serde_json",
 ]
