@@ -259,7 +259,7 @@ impl<'output> GeminiContentGen<'output> {
     }
 }
 pub(crate) fn gemini(content: String, env: &str, model: &str, mime_type: &str) -> String {
-    dotenv().unwrap();
+    dotenv().ok();
     let env = env::var(env).expect("Env");
     let gemini = TlsConnector::new().unwrap();
     let stream = TcpStream::connect("generativelanguage.googleapis.com:443").unwrap();
