@@ -3,16 +3,18 @@ use std::{
     io::Write,
 };
 
+use anyhow::Error;
+
 use crate::{decode_gemini, format::memory_schema, GeminiContentGen, Memorys};
 
 use super::content::gemini;
 
-pub fn memory(memory: Memorys, user: &GeminiContentGen) -> String {
+pub async fn memory(memory: Memorys, user: &GeminiContentGen<'_>) -> Result<String, Error> {
     let user_text = user.clone().text;
-    match memory {
-        Memorys::File => file_store_retrive(user, user_text, "txt"),
-        Memorys::Json => file_store_retrive(user, user_text, "json"),
-    }
+    Ok(match memory {
+        Memorys::File => file_store_retrive(user, user_text, "txt").await?,
+        Memorys::Json => file_store_retrive(user, user_text, "json").await?,
+    })
 }
 
 fn responses(model: &str, response: &str) -> String {
@@ -20,7 +22,11 @@ fn responses(model: &str, response: &str) -> String {
     response
 }
 
-fn file_store_retrive(user: &GeminiContentGen, user_text: &str, mode: &str) -> String {
+async fn file_store_retrive(
+    user: &GeminiContentGen<'_>,
+    user_text: &str,
+    mode: &str,
+) -> Result<String, Error> {
     let mut local_store = OpenOptions::new()
         .append(true)
         .create(true)
@@ -30,11 +36,11 @@ fn file_store_retrive(user: &GeminiContentGen, user_text: &str, mode: &str) -> S
     local_store.write_all(store_user_prompt.as_bytes());
     let file = read_to_string(format!("conversation.{}", mode)).unwrap();
     let schema = memory_schema(user_text, &file, user.max_len);
-    let gemini = gemini(schema, &user.env_variable, user.model, "application/json");
+    let gemini = gemini(schema, &user.env_variable, user.model, "application/json").await?;
     println!("{}", gemini);
     let content = decode_gemini(&gemini);
     match content {
-        Err(err) => gemini,
+        Err(err) => Ok(gemini),
         Ok(content) => {
             for parts in content.candidates {
                 let part = parts.content.parts;
@@ -43,7 +49,7 @@ fn file_store_retrive(user: &GeminiContentGen, user_text: &str, mode: &str) -> S
                     local_store.write_all(responses("output", &gemini).as_bytes());
                 }
             }
-            gemini
+            Ok(gemini)
         }
     }
 }

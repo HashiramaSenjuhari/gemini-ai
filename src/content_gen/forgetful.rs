@@ -1,5 +1,6 @@
 use std::fs;
 
+use anyhow::Error;
 use base64::encode;
 use rusty_scrap::Scrap;
 
@@ -10,12 +11,12 @@ use crate::{
 
 use super::content::gemini;
 
-pub fn forgetFul(forgetful: &GeminiContentGen) -> String {
+pub async fn forgetFul(forgetful: &GeminiContentGen<'_>) -> Result<String, Error> {
     let instruction = forgetful.instruction;
     let t = forgetful.text;
     let model = forgetful.model;
     let max_len = forgetful.max_len;
-    match forgetful.config.response {
+    Ok(match forgetful.config.response {
         Kind::Text => {
             let response = text(&forgetful.instruction, &forgetful.text, forgetful.max_len);
             // println!("{:?}", response);
@@ -25,7 +26,7 @@ pub fn forgetFul(forgetful: &GeminiContentGen) -> String {
                 forgetful.model,
                 "application/json",
             );
-            response
+            response.await?
             // String::new()
         }
         Kind::Json(jsons) => {
@@ -46,7 +47,7 @@ pub fn forgetFul(forgetful: &GeminiContentGen) -> String {
             // let response = serde_json::from_str::<JsonResponse>(&json).unwrap();
             // println!("{}", json);
             // String::new()
-            json
+            json.await?
         }
         Kind::Image(path) => {
             let images = fs::read(path).unwrap();
@@ -60,6 +61,7 @@ pub fn forgetFul(forgetful: &GeminiContentGen) -> String {
                 forgetful.model,
                 "image/jpeg",
             )
+            .await?
             // String::new()
         }
         Kind::Audio(path) => {
@@ -69,7 +71,7 @@ pub fn forgetFul(forgetful: &GeminiContentGen) -> String {
             let auth = schema(instruction, t, "audio/mpeg", &audioo, max_len);
             // println!("{}", auth);
             // let response = upload_uri(path.len(), path, 0, "audio/mpeg");
-            gemini(auth, forgetful.env_variable, forgetful.model, "audio/mpeg");
+            gemini(auth, forgetful.env_variable, forgetful.model, "audio/mpeg").await?;
 
             String::new()
         }
@@ -84,6 +86,7 @@ pub fn forgetFul(forgetful: &GeminiContentGen) -> String {
                 forgetful.model,
                 "application/pdf",
             )
+            .await?
             // println!("{}", pdf);
 
             // String::new()
@@ -93,14 +96,14 @@ pub fn forgetFul(forgetful: &GeminiContentGen) -> String {
             let videoo = encode(videoo);
 
             let video = schema(instruction, t, "video/mp4", &videoo, max_len);
-            gemini(video, &forgetful.env_variable, forgetful.model, "video/mp4")
+            gemini(video, &forgetful.env_variable, forgetful.model, "video/mp4").await?
         }
         Kind::Transcribe(path) => {
             let videoo = fs::read(path).unwrap();
             let videoo = encode(videoo);
 
             let video = schema(instruction, t, "video/mp4", &videoo, max_len);
-            gemini(video, &forgetful.env_variable, forgetful.model, "video/mp4")
+            gemini(video, &forgetful.env_variable, forgetful.model, "video/mp4").await?
         }
         Kind::Csv(path) => {
             let path = fs::read(path).unwrap();
@@ -113,6 +116,7 @@ pub fn forgetFul(forgetful: &GeminiContentGen) -> String {
                 forgetful.model,
                 "application/json",
             )
+            .await?
         }
         Kind::Rag(data) => {
             let ask = Scrap::new()
@@ -129,6 +133,7 @@ pub fn forgetFul(forgetful: &GeminiContentGen) -> String {
                 forgetful.model,
                 "application/json",
             )
+            .await?
         }
-    }
+    })
 }
