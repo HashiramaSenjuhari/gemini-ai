@@ -18,15 +18,15 @@ pub fn json(instruction: &str, text: &str, properties: &str, max_len: u64) -> St
           "type": "ARRAY",
           "items": {{
             "type": "OBJECT",
-            "properties": {
+            "properties": {{{
               
-            },
-            "maxOutputTokens":{}
-}}
+            }}}
+        }},
+        
 }}
 }}
 }}"#,
-        instruction, text, properties, max_len
+        instruction, text, properties
     );
     format
 }
@@ -108,6 +108,7 @@ pub fn schema(
 "#,
         instruction, prompt, mime_type, &source, max_len
     );
+    // println!("{}", rag);
     rag
 }
 

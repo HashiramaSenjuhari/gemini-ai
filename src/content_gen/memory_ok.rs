@@ -1,12 +1,12 @@
 use crate::{
-    Config, ConfigBuilder, ConfigNotPresent, EnvVariablePresent, GeminiContentGen,
-    GeminiContentGenBuilder, InstructionNotPresent, InstructionPresent, Kind, MaxLenNotPresent,
-    MaxLenPresent, Memory, MemoryOK, ModelPresent, PropertiesNotPresent, PropertiesPresent,
-    TextNotPresent, TextPresent, TokenLen,
+    Config, ConfigBuilder, ConfigNotPresent, EnvVariablePresent, Gemini, GeminiContentGen,
+    InstructionNotPresent, InstructionPresent, Kind, MaxLenNotPresent, MaxLenPresent, Memory,
+    MemoryOK, ModelPresent, PropertiesNotPresent, PropertiesPresent, TextNotPresent, TextPresent,
+    TokenLen,
 };
 
 impl<'instruction>
-    GeminiContentGenBuilder<
+    Gemini<
         'instruction,
         EnvVariablePresent,
         ModelPresent,
@@ -21,7 +21,7 @@ impl<'instruction>
     pub fn instruction(
         mut self,
         instruction: &'instruction str,
-    ) -> GeminiContentGenBuilder<
+    ) -> Gemini<
         'instruction,
         EnvVariablePresent,
         ModelPresent,
@@ -33,7 +33,7 @@ impl<'instruction>
         MemoryOK,
     > {
         self.instruction = instruction;
-        GeminiContentGenBuilder {
+        Gemini {
             env_variable: self.env_variable,
             model: &self.model,
             text: self.text,
@@ -57,7 +57,7 @@ impl<'instruction>
 }
 
 impl<'text>
-    GeminiContentGenBuilder<
+    Gemini<
         'text,
         EnvVariablePresent,
         ModelPresent,
@@ -72,7 +72,7 @@ impl<'text>
     pub fn text(
         mut self,
         text: &'text str,
-    ) -> GeminiContentGenBuilder<
+    ) -> Gemini<
         'text,
         EnvVariablePresent,
         ModelPresent,
@@ -84,7 +84,7 @@ impl<'text>
         MemoryOK,
     > {
         self.text = text;
-        GeminiContentGenBuilder {
+        Gemini {
             env_variable: self.env_variable,
             model: &self.model,
             text: self.text,
@@ -108,7 +108,7 @@ impl<'text>
 }
 
 impl<'max_len>
-    GeminiContentGenBuilder<
+    Gemini<
         'max_len,
         EnvVariablePresent,
         ModelPresent,
@@ -123,7 +123,7 @@ impl<'max_len>
     pub fn max_token(
         mut self,
         max: TokenLen,
-    ) -> GeminiContentGenBuilder<
+    ) -> Gemini<
         'max_len,
         EnvVariablePresent,
         ModelPresent,
@@ -140,7 +140,7 @@ impl<'max_len>
             }
             TokenLen::Default => self.max_len = 8192,
         }
-        GeminiContentGenBuilder {
+        Gemini {
             env_variable: self.env_variable,
             model: &self.model,
             text: self.text,
@@ -164,7 +164,7 @@ impl<'max_len>
 }
 
 impl<'build>
-    GeminiContentGenBuilder<
+    Gemini<
         'build,
         EnvVariablePresent,
         ModelPresent,

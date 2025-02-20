@@ -1,12 +1,20 @@
+#[cfg(feature = "sync")]
+use native_tls::TlsConnector;
+#[cfg(feature = "sync")]
 use std::{
-    io::{BufRead, BufReader, Read, Write},
+    io::{BufRead, BufReader, Write},
     net::TcpStream,
-    panic,
 };
 
-use native_tls::TlsConnector;
-use regex::Regex;
+#[cfg(feature = "async")]
+use async_std::net::TcpStream;
 
+#[cfg(feature = "async")]
+use async_tls::TlsConnector;
+
+use std::panic;
+
+#[cfg(feature = "sync")]
 pub fn search(source: &str) -> String {
     let domain = domain(source);
     let stream = format!("{}:443", domain);
@@ -14,40 +22,45 @@ pub fn search(source: &str) -> String {
     let stream = TcpStream::connect(stream).unwrap();
     let mut client = tls.connect(&domain, stream).unwrap();
 
-    let get = format!("GET {} HTTP/1.1\r\n\r\n", source);
+    let get = format!("GET {} HTTP/1.1\r\nConnection: close\r\n\r\n", source);
     client.write_all(get.as_bytes());
     client.flush();
 
-    let mut reader = BufReader::new(client);
-    // for lines in reader.lines() {
-    //     println!("{}", lines.unwrap());
-    // }
-    // let mut source = String::new();
-    let mut body = String::new();
-    loop {
-        let mut line = String::new();
-        reader.read_line(&mut line);
-        // println!("{}", line);
-
-        let size = usize::from_str_radix(&line.trim(), 16).unwrap();
-        println!("{}", size);
-        // if size == 0 {
-        //     break;
-        // }
-
-        // let mut esponse = vec![0; size];
-        // reader.read_exact(&mut esponse);
-        // let response = String::from_utf8_lossy(&esponse);
-        // body.push_str(&response);
-        // // println!("{}", response);
-
-        // let mut trail = vec![0; 2];
-        // reader.read_exact(&mut trail);
+    let mut b = String::new();
+    let reader = BufReader::new(client);
+    for line in reader.lines() {
+        let billionaire = line.unwrap();
+        b.push_str(&billionaire);
     }
     // println!("{}", source);
-    String::new()
+    b
 }
 
+#[cfg(feature = "async")]
+pub async fn search(source: &str) -> String {
+    use async_std::io::{BufReadExt, BufReader, ReadExt, WriteExt};
+
+    let domain = domain(source);
+    let stream = format!("{}:443", domain);
+    let tls = TlsConnector::new();
+    let stream = TcpStream::connect(stream).await.unwrap();
+    let mut client = tls.connect(&domain, stream).await.unwrap();
+
+    let get = format!("GET {} HTTP/1.1\r\nConnection: close\r\n\r\n", source);
+    client.write_all(get.as_bytes()).await;
+    client.flush().await;
+
+    let mut b = String::new();
+    let mut reader = BufReader::new(client);
+
+    reader.read_to_string(&mut b).await;
+    // for line in reader.lines() {
+    //     let billionaire = line.unwrap();
+    //     b.push_str(&billionaire);
+    // }
+    // println!("{}", source);
+    b
+}
 // https://en.wikipedia.org/wiki/Mark_Zuckerberg
 pub fn domain(source: &str) -> String {
     match source.starts_with("https") {

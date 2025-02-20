@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 // pub mod cloud;
 pub mod content_gen;
 // pub mod file;
+// pub mod error;
 pub mod format;
 pub mod pulse;
 pub mod schema;
@@ -33,17 +34,17 @@ pub struct Config<'config> {
 pub enum Kind<'response> {
     Json(&'response str),
     Text,
-    Audio(&'response str),
-    Transcribe(&'response str),
-    Image(&'response str),
-    Video(&'response str),
-    Pdf(&'response str),
-    Csv(&'response str),
+    Audio(&'response Vec<u8>),
+    Transcribe(&'response Vec<u8>),
+    Image(&'response Vec<u8>),
+    Video(&'response Vec<u8>),
+    Pdf(&'response Vec<u8>),
+    Csv(&'response Vec<u8>),
     Rag(&'response [&'response str]),
 }
 
 #[derive(Debug)]
-pub struct GeminiContentGenBuilder<
+pub struct Gemini<
     'gemini,
     EnvState,
     ModelState,
@@ -187,3 +188,52 @@ pub struct MaxLenNotPresent;
 
 pub struct MemoryOK;
 pub struct MemoryNot;
+
+// #[macro_export]
+// macro_rules! h {
+//     ($hi:expr) => {
+//         let main: Vec<&str> = $hi.split("},").collect();
+//         // println!("{:?}", main);
+//         let res = String::new();
+//         for line in main.iter() {
+//             let mut parts = line.split("->");
+//             let key = parts.nth(0);
+//             match key {
+//                 Some(key) => {
+//                     println!("{}", key);
+//                 }
+//                 None => {}
+//             }
+//             let values = parts.nth(0);
+//             match values {
+//                 Some(values) => {}
+//                 None => {}
+//             }
+//         }
+//     };
+// }
+
+#[macro_export]
+macro_rules! billionaire {
+    ({}) => {{}};
+    ($properties:expr => {
+        type:$type:expr,
+        description:$description:expr,
+        properties:{
+            $($nested_property:expr => $nested_properties:tt),*
+        }
+
+    }) => {{
+        $(
+            let properties = billionaire! {
+                $nested_property =>
+                    $nested_properties
+
+            };
+        )*
+    }};
+    ($properties:expr => {
+        type:$type:expr,
+        description:$description:expr
+    }) => {{}};
+}

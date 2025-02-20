@@ -10,17 +10,25 @@ homepage = "https://crates.io/crates/gemini-ai"
 description = "A Rust based Gemini AI API, enabling access to advanced natural language processing and multimodal models."
 
 
-keywords = ["gemini", "AI", "rag", "bard", "openai"]
+keywords = ["gemini", "AI", "rag", "bard"]
 
 
 [dependencies]
+async-std = "1.13.0"
+async-tls = "0.13.0"
 base64 = "0.22.1"
 csv = "1.3.1"
 dotenv = "0.15.0"
 http-scrap = "0.1.1129"
-# mongodb = { version = "3.1.0", features = ["sync"] }
 native-tls = "0.2.12"
 regex = "1.11.1"
 rusty-scrap = "0.1.9"
 serde = { version = "1.0.215", features = ["derive"] }
 serde_json = "1.0.133"
+tokio = { version = "1.43.0", features = ["full"], optional = true }
+
+
+[features]
+default = ["sync"]
+async = ["tokio"]
+sync = []

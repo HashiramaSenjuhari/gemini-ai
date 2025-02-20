@@ -541,8 +541,6 @@ impl<'tune>
         connect.write_all(get.as_bytes());
         connect.flush();
 
-        println!("{}", get);
-
         let mut buffer = BufReader::new(connect);
         let mut header = String::new();
         loop {
@@ -579,7 +577,6 @@ impl<'tune>
         }
         println!("{}", body);
         let train: TunedModel = serde_json::from_str::<TunedModel>(&body).unwrap();
-        println!("{:?}", train);
         train
     }
 }

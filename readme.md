@@ -42,7 +42,7 @@ To add this crate to your project, include it in your `Cargo.toml`:
 ```
 
 ```rust
-       let builder = GeminiContentGenBuilder::new()
+       let builder = Gemini::new()
         .env("GEMINI_API_KEY")
         .model(gemini_ai::Models::GEMINI_1_5_PRO_002)
         // .memory(gemini_ai::Memorys::Json)
@@ -87,7 +87,7 @@ To add this crate to your project, include it in your `Cargo.toml`:
 ```
 
 ```rust
-        let builder = GeminiContentGenBuilder::new()
+        let builder = Gemini::new()
         .env("GEMINI_API_KEY")
         .model(gemini_ai::Models::GEMINI_1_5_PRO_002)
         // .memory(gemini_ai::Memorys::Json)

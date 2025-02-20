@@ -1,24 +1,32 @@
+#[cfg(feature = "sync")]
+use native_tls::TlsConnector;
+#[cfg(feature = "sync")]
 use std::{
     env,
-    io::{BufRead, BufReader, Read, Write},
+    io::{BufReader, Read, Write},
     net::TcpStream,
 };
 
+#[cfg(feature = "async")]
+use async_std::io::{BufReader, Read, Write};
+#[cfg(feature = "async")]
+use async_std::net::TcpStream;
+#[cfg(feature = "async")]
+use async_tls::TlsConnector;
+
 use dotenv::dotenv;
-use native_tls::TlsConnector;
 
 use crate::{
-    Config, ConfigBuilder, ConfigNotPresent, ConfigPresent, Default, EnvVariableNotPresent,
-    EnvVariablePresent, GeminiContentGen, GeminiContentGenBuilder, InstructionNotPresent,
-    InstructionPresent, Kind, MaxLenNotPresent, MaxLenPresent, Memory, MemoryNot, MemoryOK,
+    ConfigBuilder, ConfigNotPresent, Default, EnvVariableNotPresent, EnvVariablePresent, Gemini,
+    GeminiContentGen, InstructionNotPresent, Kind, MaxLenNotPresent, MemoryNot, MemoryOK,
     MemoryType, Memorys, ModelNotPresent, ModelPresent, Models, PropertiesNotPresent,
-    PropertiesPresent, TextNotPresent, TextPresent, TokenLen,
+    TextNotPresent,
 };
 
 use super::{forgetful::forgetFul, memory::memory};
 
 impl<'gemini>
-    GeminiContentGenBuilder<
+    Gemini<
         'gemini,
         EnvVariableNotPresent,
         ModelNotPresent,
@@ -31,7 +39,7 @@ impl<'gemini>
     >
 {
     pub fn new() -> Self {
-        GeminiContentGenBuilder {
+        Gemini {
             model: "",
             env_variable: "",
             text: "",
@@ -55,7 +63,7 @@ impl<'gemini>
 }
 
 impl<'gemini>
-    GeminiContentGenBuilder<
+    Gemini<
         'gemini,
         EnvVariableNotPresent,
         ModelNotPresent,
@@ -70,7 +78,7 @@ impl<'gemini>
     pub fn env(
         mut self,
         env_variable: &'gemini str,
-    ) -> GeminiContentGenBuilder<
+    ) -> Gemini<
         'gemini,
         EnvVariablePresent,
         ModelNotPresent,
@@ -82,7 +90,7 @@ impl<'gemini>
         Default,
     > {
         self.env_variable = env_variable;
-        GeminiContentGenBuilder {
+        Gemini {
             env_variable: self.env_variable,
             model: &self.model,
             text: self.text,
@@ -106,7 +114,7 @@ impl<'gemini>
 }
 
 impl<'gemini>
-    GeminiContentGenBuilder<
+    Gemini<
         'gemini,
         EnvVariablePresent,
         ModelNotPresent,
@@ -121,7 +129,7 @@ impl<'gemini>
     pub fn model(
         mut self,
         model: Models<'gemini>,
-    ) -> GeminiContentGenBuilder<
+    ) -> Gemini<
         'gemini,
         EnvVariablePresent,
         ModelPresent,
@@ -141,7 +149,7 @@ impl<'gemini>
             Models::GEMINI_1_5_PRO_002 => self.model = "gemini-1.5-pro-002",
             Models::Custom(model) => self.model = model,
         }
-        GeminiContentGenBuilder {
+        Gemini {
             env_variable: self.env_variable,
             model: &self.model,
             text: self.text,
@@ -164,7 +172,7 @@ impl<'gemini>
     }
 }
 impl<'gemini>
-    GeminiContentGenBuilder<
+    Gemini<
         'gemini,
         EnvVariablePresent,
         ModelPresent,
@@ -178,7 +186,7 @@ impl<'gemini>
 {
     pub fn no_memory(
         mut self,
-    ) -> GeminiContentGenBuilder<
+    ) -> Gemini<
         'gemini,
         EnvVariablePresent,
         ModelPresent,
@@ -190,7 +198,7 @@ impl<'gemini>
         MemoryNot,
     > {
         self.memory = MemoryType::NoMemory;
-        GeminiContentGenBuilder {
+        Gemini {
             env_variable: self.env_variable,
             model: &self.model,
             text: self.text,
@@ -214,7 +222,7 @@ impl<'gemini>
     pub fn memory(
         mut self,
         memory: Memorys,
-    ) -> GeminiContentGenBuilder<
+    ) -> Gemini<
         'gemini,
         EnvVariablePresent,
         ModelPresent,
@@ -226,7 +234,7 @@ impl<'gemini>
         MemoryOK,
     > {
         self.memory = MemoryType::Memory(memory);
-        GeminiContentGenBuilder {
+        Gemini {
             env_variable: self.env_variable,
             model: &self.model,
             text: self.text,
@@ -250,14 +258,30 @@ impl<'gemini>
 }
 
 impl<'output> GeminiContentGen<'output> {
+    #[cfg(feature = "sync")]
     pub fn output(self) -> String {
         match self.memory {
-            MemoryType::NoMemory => forgetFul(&self),
+            MemoryType::NoMemory => {
+                // println!("{}", "hi rag");
+                forgetFul(&self)
+            }
             MemoryType::Memory(directory) => memory(directory, &self),
         }
         // println!("{:?}", self.config.properties);
     }
+    #[cfg(feature = "async")]
+    pub async fn output(self) -> String {
+        match self.memory {
+            MemoryType::NoMemory => {
+                // println!("{}", "hi rag");
+                forgetFul(&self).await
+            }
+            MemoryType::Memory(directory) => memory(directory, &self).await,
+        }
+        // println!("{:?}", self.config.properties);
+    }
 }
+#[cfg(feature = "sync")]
 pub(crate) fn gemini(content: String, env: &str, model: &str, mime_type: &str) -> String {
     dotenv().unwrap();
     let env = env::var(env).expect("Env");
@@ -280,39 +304,115 @@ pub(crate) fn gemini(content: String, env: &str, model: &str, mime_type: &str) -
         content
     );
     // println!("{}", models);
+
+    // println!("{}", models);
     stream.write_all(models.as_bytes());
     stream.flush();
 
-    let mut reader = BufReader::new(stream);
+    let mut response = String::new();
+    let mut buffer = BufReader::new(stream);
+    buffer.read_to_string(&mut response);
+    // let mut reader = BufReader::new(stream);
 
-    loop {
-        let mut line = String::new();
-        reader.read_line(&mut line);
+    // loop {
+    //     let mut line = String::new();
+    //     reader.read_line(&mut line);
 
-        if line == "\r\n" {
-            break;
-        }
-    }
+    //     if line == "\r\n" {
+    //         break;
+    //     }
+    // }
 
-    let mut body = String::new();
-    loop {
-        let mut line = String::new();
-        reader.read_line(&mut line);
-        // println!("{}", line);
+    // let mut body = String::new();
+    // loop {
+    //     let mut line = String::new();
+    //     reader.read_line(&mut line);
+    //     // println!("{}", line);
 
-        let size = usize::from_str_radix(&line.trim(), 16).unwrap();
-        if size == 0 {
-            break;
-        }
+    //     let size = usize::from_str_radix(&line.trim(), 16).unwrap();
+    //     if size == 0 {
+    //         break;
+    //     }
 
-        let mut esponse = vec![0; size];
-        reader.read_exact(&mut esponse);
-        let response = String::from_utf8_lossy(&esponse);
-        body.push_str(&response);
-        // println!("{}", response);
+    //     let mut esponse = vec![0; size];
+    //     reader.read_exact(&mut esponse);
+    //     let response = String::from_utf8_lossy(&esponse);
+    //     body.push_str(&response);
+    //     // println!("{}", response);
 
-        let mut trail = vec![0; 2];
-        reader.read_exact(&mut trail);
-    }
-    body
+    //     let mut trail = vec![0; 2];
+    //     reader.read_exact(&mut trail);
+    // }
+    response
+}
+#[cfg(feature = "async")]
+pub(crate) async fn gemini(content: String, env: &str, model: &str, mime_type: &str) -> String {
+    use std::env;
+
+    use async_std::io::{ReadExt, WriteExt};
+
+    dotenv().unwrap();
+    let env = env::var(env).expect("Env");
+    let gemini = TlsConnector::new();
+    let stream = TcpStream::connect("generativelanguage.googleapis.com:443")
+        .await
+        .unwrap();
+    let mut stream = gemini
+        .connect("generativelanguage.googleapis.com", stream)
+        .await
+        .unwrap();
+
+    let models = format!(
+        "POST /v1beta/models/{}:generateContent?key={} HTTP/1.1\r\n\
+           Host: generativelanguage.googleapis.com\r\n\
+           Content-Type: {}\r\n\
+           Content-Length: {}\r\n\
+           Connection: close\r\n\r\n{}",
+        model,
+        env,
+        mime_type,
+        content.len(),
+        content
+    );
+    // println!("{}", models);
+
+    // println!("{}", models);
+    stream.write_all(models.as_bytes()).await;
+    stream.flush().await;
+
+    let mut response = String::new();
+    let mut buffer = BufReader::new(stream);
+    buffer.read_to_string(&mut response).await;
+    // let mut reader = BufReader::new(stream);
+
+    // loop {
+    //     let mut line = String::new();
+    //     reader.read_line(&mut line);
+
+    //     if line == "\r\n" {
+    //         break;
+    //     }
+    // }
+
+    // let mut body = String::new();
+    // loop {
+    //     let mut line = String::new();
+    //     reader.read_line(&mut line);
+    //     // println!("{}", line);
+
+    //     let size = usize::from_str_radix(&line.trim(), 16).unwrap();
+    //     if size == 0 {
+    //         break;
+    //     }
+
+    //     let mut esponse = vec![0; size];
+    //     reader.read_exact(&mut esponse);
+    //     let response = String::from_utf8_lossy(&esponse);
+    //     body.push_str(&response);
+    //     // println!("{}", response);
+
+    //     let mut trail = vec![0; 2];
+    //     reader.read_exact(&mut trail);
+    // }
+    response
 }
