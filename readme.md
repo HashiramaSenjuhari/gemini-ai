@@ -11,7 +11,7 @@ Welcome to the **Rust Gemini AI**! This crate provides a Rust interface to inter
 
 - **Added Pdf,Audio,Video Uploading feature**
 
-- **Added Function Calling Feature**
+<!-- - **Added Function Calling Feature** -->
 
 - **MaxTokenLimit Based Response**
 
@@ -55,35 +55,6 @@ To add this crate to your project, include it in your `Cargo.toml`:
         .output();
 
    let string = decode_gemini(&builder); // optional to decode the output if it sends the reponse else error
-```
-
-```rust
-    //eg function calling
-    let feature1 = Properties::new(
-        "get_current_place_detail",
-        "current palce details",
-        Some(gemini_ai::pulse::format::Paramters {
-            r#type: String::from("object"),
-            properties: gemini_ai::pulse::format::SubProperties {
-                name: String::from("events"),
-                r#type: String::from("string"),
-                description: String::from("Render all the events located in current location"),
-            },
-        }),
-        Some(&["events"]),
-    );
-
-    let feature = feature(&[&feature1]);
-
-   let pluse = GeminiPulse::new()
-      .env("GEMINI_API_KEY")
-      .model(gemini_ai::Models::GEMINI_1_5_PRO)
-      .train(&feature)
-      .instruction("your are great in telling events in the current place")
-      .tell("banglore at 24 november 2024")
-      .build()
-      .output();
-
 ```
 
 ```rust
