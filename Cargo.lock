@@ -253,6 +253,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
+name = "chunked_transfer"
+version = "1.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6e4de3bc4ea267985becf712dc6d9eed8b04c953b3fcfb339ebc87acd9804901"
+
+[[package]]
 name = "concurrent-queue"
 version = "2.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -410,9 +416,11 @@ dependencies = [
  "async-std",
  "async-tls",
  "base64 0.22.1",
+ "chunked_transfer",
  "csv",
  "dotenv",
  "http-scrap",
+ "httparse",
  "native-tls",
  "regex",
  "rusty-scrap",
@@ -473,6 +481,12 @@ name = "http-scrap"
 version = "0.1.1129"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9d99b4b29d3cfdb246748f268e7ce9f930489abfe9fc03a3b99f6d6e3c1a845b"
+
+[[package]]
+name = "httparse"
+version = "1.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f2d708df4e7140240a16cd6ab0ab65c972d7433ab77819ea693fde9c43811e2a"
 
 [[package]]
 name = "itoa"
