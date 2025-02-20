@@ -5,18 +5,19 @@ use std::{
     io::Write,
 };
 
+use anyhow::Error;
+
 #[cfg(feature = "async")]
 use async_std::fs::{read_to_string, OpenOptions};
 
 use super::content::gemini;
 
-#[cfg(feature = "sync")]
 pub fn memory(memory: Memorys, user: &GeminiContentGen) -> String {
     let user_text = user.clone().text;
-    match memory {
-        Memorys::File => file_store_retrive(user, user_text, "txt"),
-        Memorys::Json => file_store_retrive(user, user_text, "json"),
-    }
+    Ok(match memory {
+        Memorys::File => file_store_retrive(user, user_text, "txt").await?,
+        Memorys::Json => file_store_retrive(user, user_text, "json").await?,
+    })
 }
 
 #[cfg(feature = "async")]
@@ -32,7 +33,6 @@ fn responses(model: &str, response: &str) -> String {
     response
 }
 
-#[cfg(feature = "sync")]
 fn file_store_retrive(user: &GeminiContentGen, user_text: &str, mode: &str) -> String {
     let mut local_store = OpenOptions::new()
         .append(true)
@@ -44,10 +44,10 @@ fn file_store_retrive(user: &GeminiContentGen, user_text: &str, mode: &str) -> S
     let file = read_to_string(format!("conversation.{}", mode)).unwrap();
     let schema = memory_schema(user_text, &file, user.max_len);
     let gemini = gemini(schema, &user.env_variable, user.model, "application/json");
-    // println!("{}", gemini);
+    println!("{}", gemini);
     let content = decode_gemini(&gemini);
     match content {
-        Err(err) => gemini,
+        Err(err) => Ok(gemini),
         Ok(content) => {
             for parts in content.candidates {
                 let part = parts.content.parts;
@@ -56,7 +56,7 @@ fn file_store_retrive(user: &GeminiContentGen, user_text: &str, mode: &str) -> S
                     local_store.write_all(responses("output", &gemini).as_bytes());
                 }
             }
-            gemini
+            Ok(gemini)
         }
     }
 }
