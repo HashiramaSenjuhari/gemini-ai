@@ -1,3 +1,6 @@
+use std::collections::HashMap;
+
+use httparse::{Response, EMPTY_HEADER};
 use serde::{Deserialize, Serialize};
 
 // pub mod cloud;
@@ -164,9 +167,51 @@ pub struct Responses {
     modelVersion: String,
 }
 
-pub fn decode_gemini(response: &str) -> Result<Responses, serde_json::Error> {
-    let response = serde_json::from_str::<Responses>(response);
-    response
+/// Take a HTTP response and decode it into a strongly-typed struct.
+/// Assumes full raw response in the argument.
+pub fn decode_gemini(raw_response: &str) -> Result<Responses, Box<dyn std::error::Error>> {
+    // Convert to bytes for httparse
+    let raw_bytes = raw_response.as_bytes();
+
+    let mut headers_buf = [EMPTY_HEADER; 64]; // Increase if you need more
+    let mut res = Response::new(&mut headers_buf);
+
+    let _ = res.parse(raw_bytes)?;
+
+    let code = res.code.unwrap_or(400); // e.g. 200
+    let reason = res.reason.unwrap_or("");
+    // dbg!("Status: {} {}", code, reason);
+
+    // Find where the headers ended.
+    let parsed_len = res.parse(raw_bytes)?.unwrap();
+    let body_bytes = &raw_bytes[parsed_len..];
+
+    let mut headers_map = HashMap::new();
+    for h in res.headers {
+        let name = h.name.to_lowercase(); // often normalized
+        let value = String::from_utf8_lossy(h.value).to_string();
+        headers_map.insert(name, value);
+    }
+
+    let transfer_encoding = headers_map
+        .get("transfer-encoding")
+        .unwrap_or(&String::new())
+        .to_lowercase();
+
+    let decoded_body = if transfer_encoding.contains("chunked") {
+        let mut decoder = chunked_transfer::Decoder::new(body_bytes);
+        let mut buf = Vec::new();
+        std::io::Read::read_to_end(&mut decoder, &mut buf)?;
+        buf
+    } else {
+        body_bytes.to_vec()
+    };
+
+    let body_str = String::from_utf8_lossy(&decoded_body);
+
+    // TODO: Make error handling less ugly
+    let responses: Responses = serde_json::from_str(&body_str)?;
+    Ok(responses)
 }
 
 pub struct Pair<'key> {
@@ -188,3 +233,28 @@ pub struct MaxLenNotPresent;
 
 pub struct MemoryOK;
 pub struct MemoryNot;
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_text() {
+        let builder = Gemini::new()
+            .env("GEMINI_API_KEY")
+            .model(Models::GEMINI_1_5_FLASH)
+            .no_memory()
+            .kind(Kind::Text)
+            .instruction("You are an unhelpful assistant")
+            .text("What is the capital of Latvia?")
+            .max_token(TokenLen::Default)
+            .build()
+            .output();
+        let result = decode_gemini(&builder);
+
+        dbg!(&builder);
+        dbg!(&result);
+
+        assert!(result.is_ok());
+    }
+}

@@ -283,7 +283,7 @@ impl<'output> GeminiContentGen<'output> {
 }
 #[cfg(feature = "sync")]
 pub(crate) fn gemini(content: String, env: &str, model: &str, mime_type: &str) -> String {
-    dotenv().unwrap();
+    let _dotenv = dotenv();
 
     let env = env::var(env).expect("Env");
     let tcp_stream = TcpStream::connect("generativelanguage.googleapis.com:443").unwrap();
@@ -337,7 +337,7 @@ pub(crate) async fn gemini(content: String, env: &str, model: &str, mime_type: &
 
     use async_std::io::{ReadExt, WriteExt};
 
-    dotenv().unwrap();
+    let _dotenv = dotenv();
     let env = env::var(env).expect("Env");
     let gemini = TlsConnector::new();
     let stream = TcpStream::connect("generativelanguage.googleapis.com:443")
