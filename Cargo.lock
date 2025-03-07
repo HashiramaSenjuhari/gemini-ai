@@ -410,7 +410,7 @@ dependencies = [
 
 [[package]]
 name = "gemini-ai"
-version = "0.1.1676"
+version = "0.1.1679"
 dependencies = [
  "anyhow",
  "async-std",
