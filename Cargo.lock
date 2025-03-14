@@ -410,7 +410,7 @@ dependencies = [
 
 [[package]]
 name = "gemini-ai"
-version = "0.1.1679"
+version = "0.1.1680"
 dependencies = [
  "anyhow",
  "async-std",
@@ -419,7 +419,6 @@ dependencies = [
  "chunked_transfer",
  "csv",
  "dotenv",
- "http-scrap",
  "httparse",
  "native-tls",
  "regex",
