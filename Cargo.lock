@@ -3,6 +3,15 @@
 version = 4
 
 [[package]]
+name = "ZuckGate"
+version = "0.1.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "98a78a50dd88da7d26d1a3dff0ba6e635cb6fe56591a8c5bfd03208f96cd32d0"
+dependencies = [
+ "native-tls",
+]
+
+[[package]]
 name = "addr2line"
 version = "0.24.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -401,7 +410,7 @@ dependencies = [
 
 [[package]]
 name = "gemini-ai"
-version = "0.1.1681"
+version = "0.1.1682"
 dependencies = [
  "anyhow",
  "async-std",
@@ -413,6 +422,7 @@ dependencies = [
  "httparse",
  "native-tls",
  "regex",
+ "rusty-scrap",
  "serde",
  "serde_json",
  "tokio",
@@ -464,6 +474,12 @@ name = "hermit-abi"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fbf6a919d6cf397374f7dfeeea91d974c7c0a7221d0d0f4f20d859d329e53fcc"
+
+[[package]]
+name = "http-scrap"
+version = "0.1.1134"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6b97b5d245c0e9f3d6da7fdf5ad504e279e1a172e8b347532f928bdbf3714a1f"
 
 [[package]]
 name = "httparse"
@@ -827,6 +843,18 @@ name = "rustversion"
 version = "1.0.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f7c45b9784283f1b2e7fb61b42047c2fd678ef0960d4f6f1eba131594cc369d4"
+
+[[package]]
+name = "rusty-scrap"
+version = "0.1.10"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e3b1162f4e3059875ef8b18aace3e992c9269ac6e75dbc9766ba83720f11b456"
+dependencies = [
+ "ZuckGate",
+ "http-scrap",
+ "native-tls",
+ "regex",
+]
 
 [[package]]
 name = "ryu"
