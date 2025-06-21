@@ -1,3 +1,6 @@
+#![allow(non_snake_case)]
+#![allow(non_camel_case_types)]
+
 use std::collections::HashMap;
 
 use httparse::{Response, EMPTY_HEADER};
@@ -45,7 +48,6 @@ pub enum Kind<'response> {
     Csv(&'response Vec<u8>),
     Rag(&'response [&'response str]),
 }
-
 #[derive(Debug)]
 pub struct Gemini<
     'gemini,
@@ -178,8 +180,8 @@ pub fn decode_gemini(raw_response: &str) -> Result<Responses, Box<dyn std::error
 
     let _ = res.parse(raw_bytes)?;
 
-    let code = res.code.unwrap_or(400); // e.g. 200
-    let reason = res.reason.unwrap_or("");
+    // let code = res.code.unwrap_or(400); // e.g. 200
+    // let reason = res.reason.unwrap_or("");
     // dbg!("Status: {} {}", code, reason);
 
     // Find where the headers ended.
