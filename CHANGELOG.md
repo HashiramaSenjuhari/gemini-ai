@@ -19,3 +19,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - fixed code and removed secret
+
+### [0.1.1689] - 2024-06-22
+
+- Fixed Bug
