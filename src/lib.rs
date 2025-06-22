@@ -43,7 +43,7 @@ pub enum Kind<'response> {
     Video(&'response Vec<u8>),
     Pdf(&'response Vec<u8>),
     Csv(&'response Vec<u8>),
-    // Rag(&'response [&'response str]),
+    Rag(&'response [&'response str]),
 }
 
 #[derive(Debug)]

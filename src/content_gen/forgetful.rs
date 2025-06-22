@@ -1,5 +1,5 @@
 use base64::encode;
-// use rusty_scrap::Scrap;
+use rusty_scrap::Scrap;
 
 use crate::{
     format::{json, schema, text},
@@ -17,7 +17,7 @@ pub fn forgetFul(forgetful: &GeminiContentGen) -> String {
     match forgetful.config.response {
         Kind::Text => {
             let response = text(&forgetful.instruction, &forgetful.text, forgetful.max_len);
-            // println!("{:?}", response);
+            println!("{:?}", response);
             let response = gemini(
                 response,
                 &forgetful.env_variable,
@@ -28,12 +28,7 @@ pub fn forgetFul(forgetful: &GeminiContentGen) -> String {
             // String::new()
         }
         Kind::Json(jsons) => {
-            let response = json(
-                forgetful.instruction,
-                forgetful.text,
-                &jsons,
-                forgetful.max_len,
-            );
+            let response = json(forgetful.instruction, forgetful.text, &jsons, 4);
             // println!("{}", response);
             let json = gemini(
                 response,
@@ -115,22 +110,22 @@ pub fn forgetFul(forgetful: &GeminiContentGen) -> String {
                 "application/json",
             )
         }
-        // Kind::Rag(data) => {
-        //     let ask = Scrap::new()
-        //         .urls(data)
-        //         .build()
-        //         .element_values()
-        //         .replace("\"", "");
-        //     // println!("{}", ask);
-        //     let encode = encode(ask);
-        //     let response = schema(instruction, t, "text/plain", &encode, max_len);
-        //     gemini(
-        //         response,
-        //         forgetful.env_variable,
-        //         forgetful.model,
-        //         "application/json",
-        //     )
-        // }
+        Kind::Rag(data) => {
+            let ask = Scrap::new()
+                .urls(data)
+                .build()
+                .element_values()
+                .replace("\"", "");
+            // println!("{}", ask);
+            let encode = encode(ask);
+            let response = schema(instruction, t, "text/plain", &encode, max_len);
+            gemini(
+                response,
+                forgetful.env_variable,
+                forgetful.model,
+                "application/json",
+            )
+        }
     }
 }
 
@@ -244,22 +239,22 @@ pub async fn forgetFul<'a>(forgetful: &GeminiContentGen<'a>) -> String {
             )
             .await
         }
-        // Kind::Rag(data) => {
-        //     let ask = Scrap::new()
-        //         .urls(data)
-        //         .build()
-        //         .element_values()
-        //         .replace("\"", "");
-        //     // println!("{}", ask);
-        //     let encode = encode(ask);
-        //     let response = schema(instruction, t, "text/plain", &encode, max_len);
-        //     gemini(
-        //         response,
-        //         forgetful.env_variable,
-        //         forgetful.model,
-        //         "application/json",
-        //     )
-        //     .await
-        // }
+        Kind::Rag(data) => {
+            let ask = Scrap::new()
+                .urls(data)
+                .build()
+                .element_values()
+                .replace("\"", "");
+            // println!("{}", ask);
+            let encode = encode(ask);
+            let response = schema(instruction, t, "text/plain", &encode, max_len);
+            gemini(
+                response,
+                forgetful.env_variable,
+                forgetful.model,
+                "application/json",
+            )
+            .await
+        }
     }
 }
