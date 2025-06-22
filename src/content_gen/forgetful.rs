@@ -17,7 +17,7 @@ pub fn forgetFul(forgetful: &GeminiContentGen) -> String {
     match forgetful.config.response {
         Kind::Text => {
             let response = text(&forgetful.instruction, &forgetful.text, forgetful.max_len);
-            println!("{:?}", response);
+            // println!("{:?}", response);
             let response = gemini(
                 response,
                 &forgetful.env_variable,
@@ -28,7 +28,12 @@ pub fn forgetFul(forgetful: &GeminiContentGen) -> String {
             // String::new()
         }
         Kind::Json(jsons) => {
-            let response = json(forgetful.instruction, forgetful.text, &jsons);
+            let response = json(
+                forgetful.instruction,
+                forgetful.text,
+                &jsons,
+                forgetful.max_len,
+            );
             // println!("{}", response);
             let json = gemini(
                 response,

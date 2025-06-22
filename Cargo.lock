@@ -410,7 +410,11 @@ dependencies = [
 
 [[package]]
 name = "gemini-ai"
+<<<<<<< HEAD
 version = "0.1.1684"
+=======
+version = "0.1.1683"
+>>>>>>> parent of 9454bd5 (relasing test)
 dependencies = [
  "anyhow",
  "async-std",
